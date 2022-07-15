@@ -1,0 +1,26 @@
+name: machinestrike
+description: Horizon Forbidden West's Machine Strike board game made with Flutter.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.5 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # flutter pub run dart_code_metrics:metrics analyze lib
+  dart_code_metrics: ^4.16.0
+  flutter_lints: ^2.0.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/tiles/
+    - assets/images/pieces/
