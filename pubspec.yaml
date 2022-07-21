@@ -22,5 +22,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/tiles/
-    - assets/images/pieces/
+    - assets/images/terrains/
+    - assets/images/machines/
+    - assets/configs/boards/

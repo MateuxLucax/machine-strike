@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:machinestrike/enum/direction.dart';
-import 'package:machinestrike/view/board.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({Key? key}) : super(key: key);
+import '../design_patterns/builder/game.dart';
+import 'board_view.dart';
 
-  @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
-  int selectedTile = 4;
-  Direction tileDirection = Direction.north;
+class HomeView extends StatelessWidget {
+  final Game game;
+  const HomeView(
+    this.game, {
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +42,7 @@ class _HomeViewState extends State<HomeView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 BoardView(
-                  selectedTile: selectedTile,
-                  tileDirection: tileDirection,
+                  board: game.board,
                 ),
               ],
             ),
