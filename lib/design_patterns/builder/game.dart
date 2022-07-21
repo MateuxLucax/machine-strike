@@ -1,5 +1,5 @@
-import 'package:machinestrike/enum/player.dart';
-import 'package:machinestrike/model/board.dart';
+import '../../enum/player.dart';
+import '../../model/board.dart';
 
 class Game {
   final Player initialPlayer;

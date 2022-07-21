@@ -1,7 +1,6 @@
-import 'package:machinestrike/design_patterns/decorator/tile/add_element_on_stack_decorator.dart';
-
 import '../../../enum/player.dart';
 import '../../../model/machine.dart';
+import '../../decorator/tile/add_element_on_stack_decorator.dart';
 import '../../singleton/boards.dart';
 import '../game.dart';
 import '../game_builder.dart';

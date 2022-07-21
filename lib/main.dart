@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'config/machines_config.dart';
+import 'config/machines.dart';
 import 'design_patterns/adapter/adapters/json_tiles_adapter.dart';
 import 'design_patterns/builder/builders/standard_game_builder.dart';
 import 'design_patterns/builder/game.dart';
@@ -13,12 +13,12 @@ Future<void> main() async {
   await Boards().loadBoards(JsonTilesAdapter());
 
   Game game = StandardGameBuilder()
-      .addMachine(MachinesConfig.bristleback, 2, 4)
-      .addMachine(MachinesConfig.burrower, 0, 2)
-      .addMachine(MachinesConfig.grazer, 1, 7)
-      .addMachine(MachinesConfig.charger, 6, 3)
-      .addMachine(MachinesConfig.lancehorn, 7, 5)
-      .addMachine(MachinesConfig.longleg, 5, 1)
+      .addMachine(Machines.bristleback, 2, 4)
+      .addMachine(Machines.burrower, 0, 2)
+      .addMachine(Machines.grazer, 1, 7)
+      .addMachine(Machines.charger, 6, 3)
+      .addMachine(Machines.lancehorn, 7, 5)
+      .addMachine(Machines.longleg, 5, 1)
       .build();
 
   runApp(MachineStrikeApp(game));

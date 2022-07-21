@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:machinestrike/config/game_config.dart';
-import 'package:machinestrike/design_patterns/decorator/tile/select_tile_stack_decorator.dart';
 
-import '../model/board.dart';
+import '../config/game_config.dart';
+import '../design_patterns/decorator/tile/select_tile_stack_decorator.dart';
 import '../enum/direction.dart';
+import '../model/board.dart';
 import '../widget/tile_widget.dart';
 
 class BoardView extends StatefulWidget {

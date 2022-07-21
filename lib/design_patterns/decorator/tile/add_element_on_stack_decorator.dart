@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:machinestrike/design_patterns/decorator/tile/tile_stack_decorator.dart';
+
+import 'tile_stack_decorator.dart';
 
 class AddElementOnStackDecorator extends TileStackDecorator {
   final Widget widget;

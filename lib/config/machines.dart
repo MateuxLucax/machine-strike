@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../model/machine.dart';
 
-class MachinesConfig {
+class Machines {
   static Image _fromAsset(String asset) {
     return Image.asset(
       asset,
