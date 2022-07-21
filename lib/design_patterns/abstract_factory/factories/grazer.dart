@@ -35,7 +35,22 @@ class Grazer implements IMachineFactory {
   }
 
   @override
-  String name() {
+  String getName() {
     return 'Grazer';
+  }
+
+  @override
+  int getCombatPower() {
+    return 4;
+  }
+
+  @override
+  int getHealth() {
+    return 8;
+  }
+
+  @override
+  int getMovementRange() {
+    return 4;
   }
 }

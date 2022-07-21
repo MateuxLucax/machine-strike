@@ -35,7 +35,22 @@ class Burrower implements IMachineFactory {
   }
 
   @override
-  String name() {
+  String getName() {
     return 'Burrower';
+  }
+
+  @override
+  int getCombatPower() {
+    return 2;
+  }
+
+  @override
+  int getHealth() {
+    return 80;
+  }
+
+  @override
+  int getMovementRange() {
+    return 1;
   }
 }

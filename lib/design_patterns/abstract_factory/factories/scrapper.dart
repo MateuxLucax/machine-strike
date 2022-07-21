@@ -35,7 +35,22 @@ class Scrapper implements IMachineFactory {
   }
 
   @override
-  String name() {
+  String getName() {
     return 'Scrapper';
+  }
+
+  @override
+  int getCombatPower() {
+    return 1;
+  }
+
+  @override
+  int getHealth() {
+    return 30;
+  }
+
+  @override
+  int getMovementRange() {
+    return 1;
   }
 }

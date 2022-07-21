@@ -42,6 +42,12 @@ class _BoardViewState extends State<BoardView> {
 
   @override
   Widget build(BuildContext context) {
+    var widgets = [...widget.controller.tileWidgets];
+    widgets[cursorPosition] = widget.controller.tileWidgets[cursorPosition].copyWith(
+        tileStack: SelectTileStackDecorator(
+      widget.controller.tileWidgets[cursorPosition].tile.tileStack,
+    ));
+
     return RawKeyboardListener(
       focusNode: FocusNode(),
       autofocus: true,
@@ -63,17 +69,7 @@ class _BoardViewState extends State<BoardView> {
               ),
               padding: const EdgeInsets.all(0),
               itemCount: widget.controller.tileWidgets.length,
-              itemBuilder: (context, index) {
-                if (index == cursorPosition) {
-                  return widget.controller.tileWidgets[index].copyWith(
-                    tileStack: SelectTileStackDecorator(
-                      widget.controller.tileWidgets[index].tile.tileStack,
-                    ),
-                  );
-                }
-
-                return widget.controller.tileWidgets[index];
-              },
+              itemBuilder: (context, index) => widgets[index],
             ),
           ),
         ),

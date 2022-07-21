@@ -35,7 +35,22 @@ class Charger implements IMachineFactory {
   }
 
   @override
-  String name() {
+  String getName() {
     return 'Charger';
+  }
+
+  @override
+  int getCombatPower() {
+    return 10;
+  }
+
+  @override
+  int getHealth() {
+    return 5;
+  }
+
+  @override
+  int getMovementRange() {
+    return 6;
   }
 }

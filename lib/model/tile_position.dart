@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
+
+import 'package:machinestrike/config/game_config.dart';
 
 class TilePosition {
   int x;
@@ -7,9 +9,11 @@ class TilePosition {
   TilePosition(this.x, this.y);
 
   move({int? x, int? y}) {
-    this.y = y != null ? (this.y + (y)) : this.y;
-    this.x = x != null ? (this.x + (x)) : this.x;
+    this.x = x != null && _respectLimits((this.x + (x))) ? (this.x + (x)) : this.x;
+    this.y = y != null && _respectLimits((this.y + (y))) ? (this.y + (y)) : this.y;
   }
+
+  bool _respectLimits(int val) => !val.isNegative && val < GameConst.size;
 
   @override
   operator ==(other) => other is TilePosition && other.x == x && other.y == y;

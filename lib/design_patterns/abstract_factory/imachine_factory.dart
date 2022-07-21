@@ -7,5 +7,8 @@ abstract class IMachineFactory {
   TilePosition getPosition();
   Widget getAsset();
   Player getPlayer();
-  String name();
+  String getName();
+  int getCombatPower();
+  int getMovementRange();
+  int getHealth();
 }

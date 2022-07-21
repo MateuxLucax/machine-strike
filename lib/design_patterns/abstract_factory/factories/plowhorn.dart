@@ -35,7 +35,22 @@ class Plowhorn implements IMachineFactory {
   }
 
   @override
-  String name() {
+  String getName() {
     return 'Plowhorn';
+  }
+
+  @override
+  int getCombatPower() {
+    return 1;
+  }
+
+  @override
+  int getHealth() {
+    return 5;
+  }
+
+  @override
+  int getMovementRange() {
+    return 3;
   }
 }

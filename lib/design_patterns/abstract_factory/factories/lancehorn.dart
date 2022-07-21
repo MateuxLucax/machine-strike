@@ -35,7 +35,22 @@ class Lancehorn implements IMachineFactory {
   }
 
   @override
-  String name() {
+  String getName() {
     return 'Lancehorn';
+  }
+
+  @override
+  int getCombatPower() {
+    return 2;
+  }
+
+  @override
+  int getHealth() {
+    return 12;
+  }
+
+  @override
+  int getMovementRange() {
+    return 2;
   }
 }

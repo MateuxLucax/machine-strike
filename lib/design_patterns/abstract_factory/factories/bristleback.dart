@@ -35,7 +35,22 @@ class Bristleback implements IMachineFactory {
   }
 
   @override
-  String name() {
+  String getName() {
     return 'Bristleback';
+  }
+
+  @override
+  int getCombatPower() {
+    return 4;
+  }
+
+  @override
+  int getHealth() {
+    return 16;
+  }
+
+  @override
+  int getMovementRange() {
+    return 2;
   }
 }

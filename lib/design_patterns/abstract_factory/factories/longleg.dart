@@ -35,7 +35,22 @@ class Longleg implements IMachineFactory {
   }
 
   @override
-  String name() {
+  String getName() {
     return 'Longleg';
+  }
+
+  @override
+  int getCombatPower() {
+    return 5;
+  }
+
+  @override
+  int getHealth() {
+    return 5;
+  }
+
+  @override
+  int getMovementRange() {
+    return 5;
   }
 }
