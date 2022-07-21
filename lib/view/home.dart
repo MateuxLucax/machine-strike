@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../controller/board_controller.dart';
 import '../design_patterns/builder/game.dart';
 import 'board_view.dart';
 
@@ -42,7 +43,7 @@ class HomeView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 BoardView(
-                  board: game.board,
+                  controller: BoardController(game.board),
                 ),
               ],
             ),

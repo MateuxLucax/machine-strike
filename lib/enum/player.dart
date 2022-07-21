@@ -1,6 +1,6 @@
 enum Player {
-  playerOne,
-  playerTwo;
+  one,
+  two;
 
-  Player next() => this == Player.playerOne ? Player.playerTwo : this;
+  Player next() => this == Player.one ? Player.two : this;
 }

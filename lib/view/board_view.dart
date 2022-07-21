@@ -1,17 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'dart:async';
 
-import '../config/game_config.dart';
+import 'package:flutter/material.dart';
+import 'package:machinestrike/model/tile_position.dart';
+import '../controller/board_controller.dart';
 import '../design_patterns/decorator/tile/select_tile_stack_decorator.dart';
-import '../enum/direction.dart';
-import '../model/board.dart';
-import '../widget/tile_widget.dart';
 
 class BoardView extends StatefulWidget {
-  final Board board;
+  final BoardController controller;
   const BoardView({
     super.key,
-    required this.board,
+    required this.controller,
   });
 
   @override
@@ -19,49 +17,27 @@ class BoardView extends StatefulWidget {
 }
 
 class _BoardViewState extends State<BoardView> {
-  final size = 64;
-  int selectedTile = 0;
-  Direction tileDirection = Direction.north;
-  List<TileWidget> tiles = [];
-
-  void _updateTile(RawKeyEvent event) {
-    if (event is! RawKeyDownEvent) return;
-    final key = event.logicalKey;
-    int newVal = selectedTile;
-    if (key == LogicalKeyboardKey.keyA) {
-      newVal -= 1;
-    } else if (key == LogicalKeyboardKey.keyS) {
-      newVal += GameConst.size;
-    } else if (key == LogicalKeyboardKey.keyW) {
-      newVal -= GameConst.size;
-    } else if (key == LogicalKeyboardKey.keyD) {
-      newVal += 1;
-    } else if (key == LogicalKeyboardKey.enter) {
-      print(tiles[selectedTile].tile.position);
-    }
-
-    if (newVal != selectedTile && (newVal >= 0 && newVal < size)) {
-      setState(() {
-        selectedTile = newVal;
-      });
-    }
-  }
-
-  void _buildTiles() {
-    for (var row in widget.board.tiles) {
-      for (var column in row) {
-        tiles.add(TileWidget(
-          tile: column,
-          tileStack: column.tileStack,
-        ));
-      }
-    }
-  }
+  int cursorPosition = 0;
+  StreamSubscription<TilePosition>? _cursorPositionSubscription;
 
   @override
   void initState() {
     super.initState();
-    _buildTiles();
+
+    _cursorPositionSubscription = widget.controller.cursorSubscriber.stream.listen(_onCursorChange);
+  }
+
+  @override
+  void dispose() {
+    _cursorPositionSubscription?.cancel();
+
+    super.dispose();
+  }
+
+  _onCursorChange(TilePosition event) {
+    setState(() {
+      cursorPosition = widget.controller.indexFromPosition(event);
+    });
   }
 
   @override
@@ -69,7 +45,7 @@ class _BoardViewState extends State<BoardView> {
     return RawKeyboardListener(
       focusNode: FocusNode(),
       autofocus: true,
-      onKey: _updateTile,
+      onKey: widget.controller.handleKeyStroke,
       child: SizedBox(
         width: 64 * 8,
         child: Container(
@@ -86,17 +62,17 @@ class _BoardViewState extends State<BoardView> {
                 crossAxisSpacing: 4,
               ),
               padding: const EdgeInsets.all(0),
-              itemCount: tiles.length,
+              itemCount: widget.controller.tileWidgets.length,
               itemBuilder: (context, index) {
-                if (index == selectedTile) {
-                  return tiles[index].copyWith(
+                if (index == cursorPosition) {
+                  return widget.controller.tileWidgets[index].copyWith(
                     tileStack: SelectTileStackDecorator(
-                      tiles[selectedTile].tile.tileStack,
+                      widget.controller.tileWidgets[index].tile.tileStack,
                     ),
                   );
                 }
 
-                return tiles[index];
+                return widget.controller.tileWidgets[index];
               },
             ),
           ),

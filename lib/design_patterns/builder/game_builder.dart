@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../enum/player.dart';
 import '../../model/board.dart';
-import '../../model/machine.dart';
+import '../abstract_factory/imachine_factory.dart';
 import 'game.dart';
 
 abstract class GameBuilder {
@@ -15,6 +15,6 @@ abstract class GameBuilder {
 
   Game getGame() => game;
 
-  GameBuilder addMachine(Machine machine, int x, int y);
+  GameBuilder addMachine(IMachineFactory machine);
   Game build();
 }

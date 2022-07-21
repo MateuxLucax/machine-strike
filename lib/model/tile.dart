@@ -1,13 +1,14 @@
+import 'package:machinestrike/design_patterns/abstract_factory/imachine_factory.dart';
+
 import '../design_patterns/decorator/tile/tile_stack.dart';
 import '../design_patterns/decorator/tile/tile_stack_base.dart';
-import 'machine.dart';
 import 'terrain.dart';
 import 'tile_position.dart';
 
 class Tile {
   TilePosition position;
   Terrain terrain;
-  Machine? machine;
+  IMachineFactory? machine;
   late TileStack tileStack;
 
   Tile({
@@ -26,7 +27,7 @@ class Tile {
   Tile copyWith({
     TilePosition? position,
     Terrain? terrain,
-    Machine? machine,
+    IMachineFactory? machine,
     TileStack? tileStack,
   }) {
     return Tile(
@@ -35,5 +36,10 @@ class Tile {
       machine: machine ?? this.machine,
       tileStack: tileStack ?? this.tileStack,
     );
+  }
+
+  clear() {
+    tileStack = TileStackBase(terrain.asset);
+    machine = null;
   }
 }
