@@ -12,6 +12,7 @@ class HomeView extends StatelessWidget {
     this.game, {
     Key? key,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final IBoardController boardController = BoardController(game.board);

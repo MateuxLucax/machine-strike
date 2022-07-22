@@ -31,6 +31,7 @@ class JsonTilesAdapter implements ITilesAdapter {
       }
       tiles.add(column);
     }
+
     return tiles;
   }
 }

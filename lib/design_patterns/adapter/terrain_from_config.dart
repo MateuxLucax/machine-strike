@@ -10,6 +10,7 @@ class TerrainFromConfig {
 
   Terrain fromConfig() {
     TerrainConfig terrainConfig = TerrainConfig.fromId(config);
+
     return Terrain(
       name: terrainConfig.getName(),
       combatPowerOffset: terrainConfig.getPowerOffset(),

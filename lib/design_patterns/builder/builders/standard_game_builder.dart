@@ -29,12 +29,14 @@ class StandardGameBuilder extends GameBuilder {
   @override
   GameBuilder setBoard(Board board) {
     game.board = board;
+
     return this;
   }
 
   @override
   GameBuilder setInitialPlayer(Player player) {
     game.initialPlayer = player;
+
     return this;
   }
 }
