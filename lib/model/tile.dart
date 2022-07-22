@@ -24,6 +24,8 @@ class Tile {
     }
   }
 
+  bool get hasMachine => machine != null;
+
   Tile copyWith({
     TilePosition? position,
     Terrain? terrain,

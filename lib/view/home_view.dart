@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../controller/board_controller.dart';
+import '../controller/iboard_controller.dart';
 import '../design_patterns/builder/game.dart';
 import 'board_view.dart';
 import 'right_sidepanel_view.dart';
@@ -13,7 +14,7 @@ class HomeView extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final boardController = BoardController(game.board);
+    final IBoardController boardController = BoardController(game.board);
 
     return Scaffold(
       appBar: AppBar(

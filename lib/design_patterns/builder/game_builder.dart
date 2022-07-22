@@ -7,14 +7,12 @@ import 'game.dart';
 
 abstract class GameBuilder {
   @protected
-  late Game game;
-
-  void createGame(Player initialPlayer, Board board) {
-    game = Game(initialPlayer, board);
-  }
+  Game game = Game();
 
   Game getGame() => game;
 
+  GameBuilder setBoard(Board board);
+  GameBuilder setInitialPlayer(Player player);
   GameBuilder addMachine(IMachineFactory machine);
   Game build();
 }

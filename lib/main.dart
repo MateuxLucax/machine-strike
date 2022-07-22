@@ -19,7 +19,9 @@ Future<void> main() async {
 
   await Boards().loadBoards();
 
-  Game game = StandardGameBuilder(Boards().random())
+  Game game = StandardGameBuilder()
+      .setBoard(Boards().random())
+      .setInitialPlayer(Player.one)
       .addMachine(Plowhorn(Player.one, 1, 0))
       .addMachine(Bristleback(Player.one, 2, 4))
       .addMachine(Burrower(Player.one, 0, 2))

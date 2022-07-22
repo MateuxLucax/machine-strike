@@ -1,16 +1,16 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
-import '../controller/board_controller.dart';
+import '../controller/iboard_controller.dart';
 import '../design_patterns/abstract_factory/imachine_factory.dart';
+import '../design_patterns/observer/cursor_observer.dart';
 import '../model/terrain.dart';
+import '../model/tile.dart';
 import '../model/tile_position.dart';
 import '../widget/machine_card_widget.dart';
 import '../widget/terrain_card_widget.dart';
 
 class RightSidePanelView extends StatefulWidget {
-  final BoardController controller;
+  final IBoardController controller;
   const RightSidePanelView(
     this.controller, {
     Key? key,
@@ -20,57 +20,22 @@ class RightSidePanelView extends StatefulWidget {
   State<RightSidePanelView> createState() => _RightSidePanelViewState();
 }
 
-class _RightSidePanelViewState extends State<RightSidePanelView> {
-  IMachineFactory? selectedMachine;
-  int cursorPosition = 0;
+class _RightSidePanelViewState extends State<RightSidePanelView> implements CursorObserver {
+  IMachineFactory? currentMachine;
   Terrain? currentTerrain;
-  late StreamSubscription<TilePosition> _cursorPositionSubscription;
-  late StreamSubscription<IMachineFactory> _machineSubscription;
-  late StreamSubscription<Terrain> _terrainSubscription;
 
   @override
   void initState() {
     super.initState();
-
-    _cursorPositionSubscription = widget.controller.cursorSubscriber.stream.listen(_onCursorChange);
-    _machineSubscription = widget.controller.selectedMachineSubscriber.stream.listen(_onMachineChange);
-    _terrainSubscription = widget.controller.currentTerrainSubscriber.stream.listen(_onChangeTerrain);
-
-    currentTerrain = widget.controller.currentTileWidget.tile.terrain;
-    selectedMachine = widget.controller.currentTileWidget.tile.machine;
-  }
-
-  @override
-  void dispose() {
-    _cursorPositionSubscription.cancel();
-    _machineSubscription.cancel();
-    _terrainSubscription.cancel();
-
-    super.dispose();
-  }
-
-  _onCursorChange(TilePosition event) {
-    setState(() {
-      selectedMachine = null;
-    });
-  }
-
-  _onMachineChange(IMachineFactory event) {
-    setState(() {
-      selectedMachine = event;
-    });
-  }
-
-  _onChangeTerrain(Terrain event) {
-    setState(() {
-      currentTerrain = event;
-    });
+    currentMachine = widget.controller.selectedTile.machine;
+    currentTerrain = widget.controller.selectedTile.terrain;
+    widget.controller.attachCursorObserver(this);
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final machine = selectedMachine;
+    final machine = currentMachine;
     final terrain = currentTerrain;
 
     return Expanded(
@@ -132,5 +97,13 @@ class _RightSidePanelViewState extends State<RightSidePanelView> {
         ),
       ),
     );
+  }
+
+  @override
+  void updateCursor(TilePosition cursor, Tile tile) {
+    setState(() {
+      currentTerrain = tile.terrain;
+      currentMachine = tile.machine;
+    });
   }
 }

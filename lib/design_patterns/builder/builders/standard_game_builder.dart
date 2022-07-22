@@ -6,10 +6,6 @@ import '../game.dart';
 import '../game_builder.dart';
 
 class StandardGameBuilder extends GameBuilder {
-  StandardGameBuilder(Board board) {
-    super.createGame(Player.one, board);
-  }
-
   @override
   GameBuilder addMachine(IMachineFactory machine) {
     final x = machine.getPosition().x;
@@ -28,5 +24,17 @@ class StandardGameBuilder extends GameBuilder {
   @override
   Game build() {
     return game;
+  }
+
+  @override
+  GameBuilder setBoard(Board board) {
+    game.board = board;
+    return this;
+  }
+
+  @override
+  GameBuilder setInitialPlayer(Player player) {
+    game.initialPlayer = player;
+    return this;
   }
 }

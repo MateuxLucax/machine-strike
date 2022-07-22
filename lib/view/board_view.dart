@@ -1,12 +1,14 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:machinestrike/model/tile_position.dart';
-import '../controller/board_controller.dart';
+
+import '../controller/iboard_controller.dart';
 import '../design_patterns/decorator/tile/select_tile_stack_decorator.dart';
+import '../design_patterns/observer/cursor_observer.dart';
+import '../model/tile.dart';
+import '../model/tile_position.dart';
+import '../widget/tile_widget.dart';
 
 class BoardView extends StatefulWidget {
-  final BoardController controller;
+  final IBoardController controller;
   const BoardView(
     this.controller, {
     super.key,
@@ -16,33 +18,31 @@ class BoardView extends StatefulWidget {
   State<BoardView> createState() => _BoardViewState();
 }
 
-class _BoardViewState extends State<BoardView> {
+class _BoardViewState extends State<BoardView> implements CursorObserver {
+  List<TileWidget> tileWidgets = [];
   int cursorPosition = 0;
-  late StreamSubscription<TilePosition> _cursorPositionSubscription;
+
+  _tilesToWidgets(List<List<Tile>> tiles) {
+    for (var row in tiles) {
+      for (var column in row) {
+        tileWidgets.add(TileWidget(
+          tile: column,
+          tileStack: column.tileStack,
+        ));
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-
-    _cursorPositionSubscription = widget.controller.cursorSubscriber.stream.listen(_onCursorChange);
-  }
-
-  @override
-  void dispose() {
-    _cursorPositionSubscription.cancel();
-
-    super.dispose();
-  }
-
-  _onCursorChange(TilePosition event) {
-    setState(() {
-      cursorPosition = widget.controller.indexFromPosition(event);
-    });
+    _tilesToWidgets(widget.controller.tiles);
+    widget.controller.attachCursorObserver(this);
   }
 
   @override
   Widget build(BuildContext context) {
-    var widgets = [...widget.controller.tileWidgets];
+    var widgets = [...tileWidgets];
     widgets[cursorPosition] = widgets[cursorPosition].copyWith(
       tileStack: SelectTileStackDecorator(widgets[cursorPosition].tile.tileStack),
     );
@@ -67,12 +67,19 @@ class _BoardViewState extends State<BoardView> {
                 crossAxisSpacing: 4,
               ),
               padding: const EdgeInsets.all(0),
-              itemCount: widget.controller.tileWidgets.length,
+              itemCount: tileWidgets.length,
               itemBuilder: (context, index) => widgets[index],
             ),
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void updateCursor(TilePosition cursor, Tile? terrain) {
+    setState(() {
+      cursorPosition = tileWidgets.indexWhere((widget) => widget.tile.position == cursor);
+    });
   }
 }

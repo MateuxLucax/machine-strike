@@ -7,8 +7,6 @@ class TileWidget extends StatelessWidget {
   final Tile tile;
   final TileStack tileStack;
 
-  bool get hasMachine => tile.machine != null;
-
   const TileWidget({
     Key? key,
     required this.tile,
