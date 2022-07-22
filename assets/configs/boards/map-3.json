@@ -1,0 +1,12 @@
+{
+  "terrains": [
+    ["ma","ma","mo","mo","ga","ga","ga","ga"],
+    ["ma","mo","mo","ga","ga","ga","ga","ga"],
+    ["mo","mo","ga","ga","ga","ga","ga","ga"],
+    ["mo","ga","ga","ga","ga","ga","ga","ga"],
+    ["hi","ga","ga","ga","ga","ga","ga","ga"],
+    ["hi","hi","hi","mo","ga","ga","ga","mo"],
+    ["hi","hi","mo","mo","mo","ga","mo","mo"],
+    ["hi","mo","mo","mo","mo","mo","mo","mo"]
+  ]
+}

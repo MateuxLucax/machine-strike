@@ -1,13 +1,13 @@
 import '../../../enum/player.dart';
+import '../../../model/board.dart';
 import '../../abstract_factory/imachine_factory.dart';
 import '../../decorator/tile/add_element_on_stack_decorator.dart';
-import '../../singleton/boards.dart';
 import '../game.dart';
 import '../game_builder.dart';
 
 class StandardGameBuilder extends GameBuilder {
-  StandardGameBuilder() {
-    super.createGame(Player.one, Boards().get(1));
+  StandardGameBuilder(Board board) {
+    super.createGame(Player.one, board);
   }
 
   @override

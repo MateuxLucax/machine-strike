@@ -37,6 +37,7 @@ class _RightSidePanelViewState extends State<RightSidePanelView> {
     _terrainSubscription = widget.controller.currentTerrainSubscriber.stream.listen(_onChangeTerrain);
 
     currentTerrain = widget.controller.currentTileWidget.tile.terrain;
+    selectedMachine = widget.controller.currentTileWidget.tile.machine;
   }
 
   @override
