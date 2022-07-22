@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:machinestrike/design_patterns/abstract_factory/factories/burrower.dart';
-import 'package:machinestrike/design_patterns/abstract_factory/factories/charger.dart';
-import 'package:machinestrike/design_patterns/abstract_factory/factories/grazer.dart';
-import 'package:machinestrike/design_patterns/abstract_factory/factories/lancehorn.dart';
-import 'package:machinestrike/design_patterns/abstract_factory/factories/longleg.dart';
 
 import 'design_patterns/abstract_factory/factories/bristleback.dart';
+import 'design_patterns/abstract_factory/factories/burrower.dart';
+import 'design_patterns/abstract_factory/factories/charger.dart';
+import 'design_patterns/abstract_factory/factories/grazer.dart';
+import 'design_patterns/abstract_factory/factories/lancehorn.dart';
+import 'design_patterns/abstract_factory/factories/longleg.dart';
 import 'design_patterns/adapter/adapters/json_tiles_adapter.dart';
 import 'design_patterns/builder/builders/standard_game_builder.dart';
 import 'design_patterns/builder/game.dart';
 import 'design_patterns/singleton/boards.dart';
 import 'enum/player.dart';
-import 'view/home.dart';
+import 'view/home_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,7 +44,7 @@ class MachineStrikeApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
       ),
       home: HomeView(game),
     );

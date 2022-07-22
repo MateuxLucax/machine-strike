@@ -1,8 +1,9 @@
 import 'package:flutter/services.dart';
-import 'package:machinestrike/config/game_config.dart';
 
+import '../design_patterns/abstract_factory/imachine_factory.dart';
 import '../design_patterns/observer/cursor/default_subscriber.dart';
 import '../design_patterns/observer/cursor/subscribers/board_cursor_subscriber.dart';
+import '../design_patterns/observer/cursor/subscribers/machine_subscriber.dart';
 import '../model/board.dart';
 import '../model/tile_position.dart';
 import '../widget/tile_widget.dart';
@@ -12,6 +13,7 @@ class BoardController {
   final List<TileWidget> tileWidgets = [];
   TilePosition cursorPosition = TilePosition(0, 0);
   DefaultSubscriber<TilePosition> cursorSubscriber = BoardCursorSubscriber(0, 0);
+  DefaultSubscriber<IMachineFactory> selectedMachineSubscriber = MachineSubscriber();
 
   BoardController(this.board) {
     for (var row in board.tiles) {
@@ -48,11 +50,11 @@ class BoardController {
       print(tileWidgets[cursorPositionIndex].tile.machine?.getPlayer());
     }
 
-    if (tileWidgets[cursorPositionIndex].hasMachine) {
-      print('hasMachine');
-      // TODO: show attack range
-    }
-
     cursorSubscriber.update(cursorPosition);
+
+    if (tileWidgets[cursorPositionIndex].hasMachine) {
+      final machine = tileWidgets[cursorPositionIndex].tile.machine;
+      if (machine != null) selectedMachineSubscriber.update(machine);
+    }
   }
 }

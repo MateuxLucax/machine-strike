@@ -7,9 +7,9 @@ import '../design_patterns/decorator/tile/select_tile_stack_decorator.dart';
 
 class BoardView extends StatefulWidget {
   final BoardController controller;
-  const BoardView({
+  const BoardView(
+    this.controller, {
     super.key,
-    required this.controller,
   });
 
   @override
@@ -18,7 +18,7 @@ class BoardView extends StatefulWidget {
 
 class _BoardViewState extends State<BoardView> {
   int cursorPosition = 0;
-  StreamSubscription<TilePosition>? _cursorPositionSubscription;
+  late StreamSubscription<TilePosition> _cursorPositionSubscription;
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _BoardViewState extends State<BoardView> {
 
   @override
   void dispose() {
-    _cursorPositionSubscription?.cancel();
+    _cursorPositionSubscription.cancel();
 
     super.dispose();
   }

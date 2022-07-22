@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../controller/board_controller.dart';
 import '../design_patterns/builder/game.dart';
 import 'board_view.dart';
+import 'machine_sidepanel_view.dart';
 
 class HomeView extends StatelessWidget {
   final Game game;
@@ -10,9 +11,10 @@ class HomeView extends StatelessWidget {
     this.game, {
     Key? key,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    final boardController = BoardController(game.board);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Machine Strike'),
@@ -42,9 +44,7 @@ class HomeView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                BoardView(
-                  controller: BoardController(game.board),
-                ),
+                BoardView(boardController),
               ],
             ),
           ),
@@ -52,8 +52,8 @@ class HomeView extends StatelessWidget {
             width: 24,
           ),
           Column(
-            children: const [
-              // Text('test'),
+            children: [
+              MachineSidePanelView(boardController),
             ],
           ),
         ],
