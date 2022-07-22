@@ -82,7 +82,7 @@ class _RightSidePanelViewState extends State<RightSidePanelView> {
           color: theme.colorScheme.secondary,
         ),
         width: 256,
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,7 +94,7 @@ class _RightSidePanelViewState extends State<RightSidePanelView> {
                   fontSize: theme.textTheme.headline6?.fontSize ?? 12.0,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
               if (machine != null)
                 MachineCardWidget(machine)
               else
@@ -106,7 +106,7 @@ class _RightSidePanelViewState extends State<RightSidePanelView> {
                     fontSize: theme.textTheme.bodyText1?.fontSize,
                   ),
                 ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
               Text(
                 'Terrain info',
                 style: TextStyle(
@@ -114,7 +114,7 @@ class _RightSidePanelViewState extends State<RightSidePanelView> {
                   fontSize: theme.textTheme.headline6?.fontSize ?? 12.0,
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
               if (terrain != null)
                 TerrainCardWidget(terrain)
               else

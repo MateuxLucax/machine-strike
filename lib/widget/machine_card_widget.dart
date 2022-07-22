@@ -31,7 +31,11 @@ class MachineCardWidget extends StatelessWidget {
           children: [
             Align(
               alignment: Alignment.center,
-              child: machine.getAsset(),
+              child: SizedBox(
+                width: 64,
+                height: 64,
+                child: machine.getAsset(),
+              ),
             ),
             const SizedBox(height: 6),
             Align(

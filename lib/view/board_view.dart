@@ -43,10 +43,9 @@ class _BoardViewState extends State<BoardView> {
   @override
   Widget build(BuildContext context) {
     var widgets = [...widget.controller.tileWidgets];
-    widgets[cursorPosition] = widget.controller.tileWidgets[cursorPosition].copyWith(
-        tileStack: SelectTileStackDecorator(
-      widget.controller.tileWidgets[cursorPosition].tile.tileStack,
-    ));
+    widgets[cursorPosition] = widgets[cursorPosition].copyWith(
+      tileStack: SelectTileStackDecorator(widgets[cursorPosition].tile.tileStack),
+    );
 
     return RawKeyboardListener(
       focusNode: FocusNode(),

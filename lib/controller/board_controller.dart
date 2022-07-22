@@ -43,13 +43,13 @@ class BoardController {
     if (event is! RawKeyDownEvent) return;
 
     final key = event.logicalKey;
-    if (key == LogicalKeyboardKey.keyA) {
+    if (key == LogicalKeyboardKey.keyA || key == LogicalKeyboardKey.arrowLeft) {
       cursorPosition.move(y: -1);
-    } else if (key == LogicalKeyboardKey.keyD) {
+    } else if (key == LogicalKeyboardKey.keyD || key == LogicalKeyboardKey.arrowRight) {
       cursorPosition.move(y: 1);
-    } else if (key == LogicalKeyboardKey.keyS) {
+    } else if (key == LogicalKeyboardKey.keyS || key == LogicalKeyboardKey.arrowDown) {
       cursorPosition.move(x: 1);
-    } else if (key == LogicalKeyboardKey.keyW) {
+    } else if (key == LogicalKeyboardKey.keyW || key == LogicalKeyboardKey.arrowUp) {
       cursorPosition.move(x: -1);
     } else if (key == LogicalKeyboardKey.enter && tileWidgets[cursorPositionIndex].hasMachine) {
       print(tileWidgets[cursorPositionIndex].tile.machine?.getPlayer());

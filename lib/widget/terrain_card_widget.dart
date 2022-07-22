@@ -31,7 +31,11 @@ class TerrainCardWidget extends StatelessWidget {
           children: [
             Align(
               alignment: Alignment.center,
-              child: terrain.asset,
+              child: SizedBox(
+                width: 64,
+                height: 64,
+                child: terrain.asset,
+              ),
             ),
             const SizedBox(height: 6),
             Align(
