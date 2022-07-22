@@ -11,6 +11,7 @@ class TerrainFromConfig {
   Terrain fromConfig() {
     TerrainConfig terrainConfig = TerrainConfig.fromId(config);
     return Terrain(
+      name: terrainConfig.getName(),
       combatPowerOffset: terrainConfig.getPowerOffset(),
       asset: Image.asset(
         terrainConfig.getAsset(),
@@ -67,5 +68,9 @@ enum TerrainConfig {
       case mountain:
         return 3;
     }
+  }
+
+  String getName() {
+    return '${toString().split('.').last[0].toUpperCase()}${toString().split('.').last.substring(1).toLowerCase()}';
   }
 }

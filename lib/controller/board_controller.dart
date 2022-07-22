@@ -4,7 +4,9 @@ import '../design_patterns/abstract_factory/imachine_factory.dart';
 import '../design_patterns/observer/cursor/default_subscriber.dart';
 import '../design_patterns/observer/cursor/subscribers/board_cursor_subscriber.dart';
 import '../design_patterns/observer/cursor/subscribers/machine_subscriber.dart';
+import '../design_patterns/observer/cursor/subscribers/terrain_subscriber.dart';
 import '../model/board.dart';
+import '../model/terrain.dart';
 import '../model/tile_position.dart';
 import '../widget/tile_widget.dart';
 
@@ -14,6 +16,7 @@ class BoardController {
   TilePosition cursorPosition = TilePosition(0, 0);
   DefaultSubscriber<TilePosition> cursorSubscriber = BoardCursorSubscriber(0, 0);
   DefaultSubscriber<IMachineFactory> selectedMachineSubscriber = MachineSubscriber();
+  DefaultSubscriber<Terrain> currentTerrainSubscriber = TerrainSubscriber();
 
   BoardController(this.board) {
     for (var row in board.tiles) {
@@ -34,6 +37,8 @@ class BoardController {
         (widget) => widget.tile.position == cursorPosition,
       );
 
+  TileWidget get currentTileWidget => tileWidgets[cursorPositionIndex];
+
   void handleKeyStroke(RawKeyEvent event) {
     if (event is! RawKeyDownEvent) return;
 
@@ -51,6 +56,7 @@ class BoardController {
     }
 
     cursorSubscriber.update(cursorPosition);
+    currentTerrainSubscriber.update(board.getByPosition(cursorPosition).terrain);
 
     if (tileWidgets[cursorPositionIndex].hasMachine) {
       final machine = tileWidgets[cursorPositionIndex].tile.machine;
