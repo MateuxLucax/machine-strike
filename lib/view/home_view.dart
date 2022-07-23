@@ -4,7 +4,8 @@ import '../controller/board_controller.dart';
 import '../controller/iboard_controller.dart';
 import '../design_patterns/builder/game.dart';
 import 'board_view.dart';
-import 'right_sidepanel_view.dart';
+import 'left_side_panel_view.dart';
+import 'right_side_panel_view.dart';
 
 class HomeView extends StatelessWidget {
   final Game game;
@@ -35,7 +36,7 @@ class HomeView extends StatelessWidget {
         children: [
           Column(
             children: const [
-              // Text('test'),
+              LeftSidePanelView(),
             ],
           ),
           const SizedBox(
