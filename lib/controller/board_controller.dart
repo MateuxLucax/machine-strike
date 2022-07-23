@@ -50,7 +50,6 @@ class BoardController implements IBoardController {
       if (machine != null) {
         board.tiles[initialPosition.x + 1][initialPosition.y + 1].addMachine(machine);
         selectedTile.unsetMachine();
-        print([board.tiles[initialPosition.x + 1][initialPosition.y + 1], selectedTile]);
         for (var observer in tilesObserver) {
           observer.update(tiles);
         }
