@@ -1,7 +1,6 @@
-import 'package:machinestrike/design_patterns/abstract_factory/imachine_factory.dart';
-
+import '../design_patterns/abstract_factory/imachine_factory.dart';
 import '../design_patterns/decorator/tile/tile_stack.dart';
-import '../design_patterns/decorator/tile/tile_stack_base.dart';
+import '../design_patterns/decorator/tile/tile_stack_decorator.dart';
 import 'terrain.dart';
 import 'tile_position.dart';
 
@@ -9,7 +8,7 @@ class Tile {
   TilePosition position;
   Terrain terrain;
   IMachineFactory? machine;
-  late TileStack tileStack;
+  TileStack tileStack = TileStackDecorator([]);
 
   Tile({
     required this.position,
@@ -18,7 +17,7 @@ class Tile {
     TileStack? tileStack,
   }) {
     if (tileStack == null) {
-      this.tileStack = TileStackBase(terrain.asset);
+      this.tileStack.addToStack(terrain.asset);
     } else {
       this.tileStack = tileStack;
     }
@@ -40,8 +39,21 @@ class Tile {
     );
   }
 
-  clear() {
-    tileStack = TileStackBase(terrain.asset);
-    machine = null;
+  void unsetMachine() {
+    final currentMachine = machine;
+    if (currentMachine != null) {
+      tileStack.removeFromStack(currentMachine.getAsset());
+      machine = null;
+    }
+  }
+
+  addMachine(IMachineFactory machine) {
+    this.machine = machine;
+    tileStack.addToStack(machine.getAsset());
+  }
+
+  @override
+  String toString() {
+    return '$position - ${machine?.getName()} - ${terrain.name} - ${tileStack.getStack().length}';
   }
 }

@@ -1,12 +1,16 @@
 import 'dart:ui';
 
-import 'package:machinestrike/config/game_config.dart';
+import '../config/game_config.dart';
 
 class TilePosition {
   int x;
   int y;
 
   TilePosition(this.x, this.y);
+
+  TilePosition copyWith({int? x, int? y}) {
+    return TilePosition(x ?? this.x, y ?? this.y);
+  }
 
   move({int? x, int? y}) {
     this.x = x != null && _respectLimits((this.x + (x))) ? (this.x + (x)) : this.x;

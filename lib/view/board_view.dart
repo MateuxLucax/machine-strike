@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../controller/iboard_controller.dart';
 import '../design_patterns/decorator/tile/select_tile_stack_decorator.dart';
 import '../design_patterns/observer/cursor_observer.dart';
+import '../design_patterns/observer/update_tiles_observer.dart';
 import '../model/tile.dart';
 import '../model/tile_position.dart';
 import '../widget/tile_widget.dart';
@@ -18,33 +19,36 @@ class BoardView extends StatefulWidget {
   State<BoardView> createState() => _BoardViewState();
 }
 
-class _BoardViewState extends State<BoardView> implements CursorObserver {
+class _BoardViewState extends State<BoardView> implements CursorObserver, UpdateTilesObserver {
   List<TileWidget> tileWidgets = [];
   int cursorPosition = 0;
 
-  _tilesToWidgets(List<List<Tile>> tiles) {
+  List<TileWidget> _tilesToWidgets(List<List<Tile>> tiles) {
+    List<TileWidget> newTiles = [];
     for (var row in tiles) {
       for (var column in row) {
-        tileWidgets.add(TileWidget(
-          tile: column,
-          tileStack: column.tileStack,
-        ));
+        newTiles.add(TileWidget(column));
       }
     }
+
+    return newTiles;
   }
 
   @override
   void initState() {
     super.initState();
-    _tilesToWidgets(widget.controller.tiles);
+    tileWidgets = _tilesToWidgets(widget.controller.tiles);
     widget.controller.attachCursorObserver(this);
+    widget.controller.attachTilesObserver(this);
   }
 
   @override
   Widget build(BuildContext context) {
     var widgets = [...tileWidgets];
-    widgets[cursorPosition] = widgets[cursorPosition].copyWith(
-      tileStack: SelectTileStackDecorator(widgets[cursorPosition].tile.tileStack),
+    widgets[cursorPosition] = TileWidget(
+      widgets[cursorPosition].tile.copyWith(
+            tileStack: SelectTileStackDecorator(widgets[cursorPosition].tile.tileStack.getStack()),
+          ),
     );
 
     return RawKeyboardListener(
@@ -80,6 +84,13 @@ class _BoardViewState extends State<BoardView> implements CursorObserver {
   void updateCursor(TilePosition cursor, Tile? terrain) {
     setState(() {
       cursorPosition = tileWidgets.indexWhere((widget) => widget.tile.position == cursor);
+    });
+  }
+
+  @override
+  void update(List<List<Tile>> tiles) {
+    setState(() {
+      tileWidgets = _tilesToWidgets(tiles);
     });
   }
 }

@@ -12,6 +12,8 @@ class AddElementOnStackDecorator extends TileStackDecorator {
 
   @override
   List<Widget> getStack() {
+    // TODO: add key to stack, so it can be properly manipulated, like a decorator to remove a element
+    // tileStack.getStack().where((element) => element.key)
     return [...super.getStack(), widget];
   }
 }

@@ -4,6 +4,7 @@ class MachineFromAsset {
   static Image _fromAsset(String asset) {
     return Image.asset(
       asset,
+      key: Key(asset),
       fit: BoxFit.fill,
     );
   }
