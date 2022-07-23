@@ -54,26 +54,6 @@ class _RightSidePanelViewState extends State<RightSidePanelView> implements Curs
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Machine info',
-                style: TextStyle(
-                  color: theme.colorScheme.onSecondary,
-                  fontSize: theme.textTheme.headline6?.fontSize ?? 12.0,
-                ),
-              ),
-              const SizedBox(height: 12),
-              if (machine != null)
-                MachineCardWidget(machine)
-              else
-                Text(
-                  'Hover or select a machine to see it\'s details',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: theme.colorScheme.onSecondary,
-                    fontSize: theme.textTheme.bodyText1?.fontSize,
-                  ),
-                ),
-              const SizedBox(height: 12),
-              Text(
                 'Terrain info',
                 style: TextStyle(
                   color: theme.colorScheme.onSecondary,
@@ -86,6 +66,26 @@ class _RightSidePanelViewState extends State<RightSidePanelView> implements Curs
               else
                 Text(
                   'Couldn\'t retrieve terrain info',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: theme.colorScheme.onSecondary,
+                    fontSize: theme.textTheme.bodyText1?.fontSize,
+                  ),
+                ),
+              const SizedBox(height: 12),
+              Text(
+                'Machine info',
+                style: TextStyle(
+                  color: theme.colorScheme.onSecondary,
+                  fontSize: theme.textTheme.headline6?.fontSize ?? 12.0,
+                ),
+              ),
+              const SizedBox(height: 12),
+              if (machine != null)
+                MachineCardWidget(machine)
+              else
+                Text(
+                  'Hover or select a machine to see it\'s details',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: theme.colorScheme.onSecondary,
