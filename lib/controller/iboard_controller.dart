@@ -5,7 +5,7 @@ import '../design_patterns/observer/update_tiles_observer.dart';
 import '../model/tile.dart';
 
 abstract class IBoardController {
-  Tile get selectedTile;
+  Tile get currentTile;
 
   List<List<Tile>> get tiles;
 

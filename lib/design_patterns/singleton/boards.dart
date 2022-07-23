@@ -43,6 +43,6 @@ class Boards {
   }
 
   Board random() {
-    return boards[Random().nextInt(boards.length)];
+    return get(Random().nextInt(boards.length));
   }
 }

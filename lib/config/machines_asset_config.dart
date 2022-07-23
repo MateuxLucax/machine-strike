@@ -21,14 +21,14 @@ class MachineFromAsset {
 }
 
 class MachineAssets {
-  static const folder = 'assets/images/machines';
-  static const bristleback = '$folder/bristleback.png';
-  static const burrower = '$folder/burrower.png';
-  static const charger = '$folder/charger.png';
-  static const grazer = '$folder/grazer.png';
-  static const lancehorn = '$folder/lancehorn.png';
-  static const longleg = '$folder/longleg.png';
-  static const plowhorn = '$folder/plowhorn.png';
-  static const scrapper = '$folder/scrapper.png';
-  static const skydrifter = '$folder/skydrifter.png';
+  static const _folder = 'assets/images/machines';
+  static const bristleback = '$_folder/bristleback.png';
+  static const burrower = '$_folder/burrower.png';
+  static const charger = '$_folder/charger.png';
+  static const grazer = '$_folder/grazer.png';
+  static const lancehorn = '$_folder/lancehorn.png';
+  static const longleg = '$_folder/longleg.png';
+  static const plowhorn = '$_folder/plowhorn.png';
+  static const scrapper = '$_folder/scrapper.png';
+  static const skydrifter = '$_folder/skydrifter.png';
 }

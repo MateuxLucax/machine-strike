@@ -47,7 +47,7 @@ class Tile {
     }
   }
 
-  addMachine(IMachineFactory machine) {
+  void addMachine(IMachineFactory machine) {
     this.machine = machine;
     tileStack.addToStack(machine.getAsset());
   }

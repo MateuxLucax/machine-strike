@@ -27,8 +27,8 @@ class _RightSidePanelViewState extends State<RightSidePanelView> implements Curs
   @override
   void initState() {
     super.initState();
-    currentMachine = widget.controller.selectedTile.machine;
-    currentTerrain = widget.controller.selectedTile.terrain;
+    currentMachine = widget.controller.currentTile.machine;
+    currentTerrain = widget.controller.currentTile.terrain;
     widget.controller.attachCursorObserver(this);
   }
 

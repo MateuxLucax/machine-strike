@@ -12,11 +12,12 @@ class BoardController implements IBoardController {
   final List<CursorObserver> cursorObservers = [];
   final List<UpdateTilesObserver> tilesObserver = [];
   TilePosition cursor = TilePosition(0, 0);
+  Tile? selectedTile;
 
   BoardController(this.board);
 
   @override
-  Tile get selectedTile => board.tiles[cursor.x][cursor.y];
+  Tile get currentTile => board.tiles[cursor.x][cursor.y];
 
   @override
   List<List<Tile>> get tiles => board.tiles;
@@ -45,11 +46,16 @@ class BoardController implements IBoardController {
       cursor.move(x: 1);
     } else if (key == LogicalKeyboardKey.keyW || key == LogicalKeyboardKey.arrowUp) {
       cursor.move(x: -1);
-    } else if (key == LogicalKeyboardKey.enter && selectedTile.hasMachine) {
-      final machine = selectedTile.machine;
-      if (machine != null) {
-        board.tiles[initialPosition.x + 1][initialPosition.y + 1].addMachine(machine);
-        selectedTile.unsetMachine();
+    } else if (key == LogicalKeyboardKey.escape) {
+      selectedTile = null;
+    } else if (key == LogicalKeyboardKey.enter) {
+      final tile = selectedTile;
+      if (tile == null && currentTile.hasMachine) {
+        selectedTile = currentTile;
+      } else if (tile != null && !currentTile.hasMachine) {
+        currentTile.addMachine(tile.machine!);
+        board.tiles[tile.position.x][tile.position.y].unsetMachine();
+        selectedTile = null;
         for (var observer in tilesObserver) {
           observer.update(tiles);
         }
@@ -58,7 +64,7 @@ class BoardController implements IBoardController {
 
     if (initialPosition != cursor) {
       for (var observer in cursorObservers) {
-        observer.updateCursor(cursor, selectedTile);
+        observer.updateCursor(cursor, currentTile);
       }
     }
   }
