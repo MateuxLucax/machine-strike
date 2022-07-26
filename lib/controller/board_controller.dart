@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import '../design_patterns/observer/cursor_observer.dart';
 import '../design_patterns/observer/update_tiles_observer.dart';
 import '../enum/direction.dart';
+import '../enum/player.dart';
 import '../enum/reachability.dart';
 import '../model/board.dart';
 import '../model/tile.dart';
@@ -52,13 +53,13 @@ class BoardController implements IBoardController {
     final tile = selectedTile;
 
     final key = event.logicalKey;
-    if (key == LogicalKeyboardKey.keyA || key == LogicalKeyboardKey.arrowLeft) {
+    if (key == LogicalKeyboardKey.keyA) {
       cursor.move(col: -1);
-    } else if (key == LogicalKeyboardKey.keyD || key == LogicalKeyboardKey.arrowRight) {
+    } else if (key == LogicalKeyboardKey.keyD) {
       cursor.move(col: 1);
-    } else if (key == LogicalKeyboardKey.keyS || key == LogicalKeyboardKey.arrowDown) {
+    } else if (key == LogicalKeyboardKey.keyS) {
       cursor.move(row: 1);
-    } else if (key == LogicalKeyboardKey.keyW || key == LogicalKeyboardKey.arrowUp) {
+    } else if (key == LogicalKeyboardKey.keyW) {
       cursor.move(row: -1);
     } else if (key == LogicalKeyboardKey.escape) {
       _reset();
@@ -68,57 +69,30 @@ class BoardController implements IBoardController {
       if (tile == null && currentTile.hasMachine) {
         selectedTile = currentTile;
         _reachablePieces(currentTile);
+        _attackRange(selectedTile!);
       } else if (tile != null && !currentTile.hasMachine) {
         _reset(tile: tile);
       }
-
       _callUpdateTiles();
       _callUpdateCursor();
     } else if (key == LogicalKeyboardKey.keyF && tile != null) {
-      print('curr $currentTile');
-      Tile? attack;
-      final pos = currentTile.position;
-      switch (tile.machine!.direction) {
-        case Direction.north:
-          final a = tiles[pos.row][(pos.col + 1)];
-          if (a.hasMachine) {
-            attack = a;
-          }
-          break;
-        case Direction.east:
-          final a = tiles[(pos.row + 1)][pos.col];
-          if (a.hasMachine) {
-            attack = a;
-          }
-          break;
-        case Direction.south:
-          final a = tiles[pos.row][(pos.col - 1)];
-          if (a.hasMachine) {
-            attack = a;
-          }
-          break;
-        case Direction.west:
-          final a = tiles[(pos.row - 1)][pos.col];
-          if (a.hasMachine) {
-            attack = a;
-          }
-          break;
-        default:
-          break;
-      }
-
-      print('attack $attack');
+      _attackRange(tile);
+      _callUpdateTiles();
     } else if (key == LogicalKeyboardKey.keyQ && tile != null) {
       if (tile.hasMachine) {
         tile.machine!.updateDirection(tile.machine!.direction.previous());
         tile.updateMachine();
       }
+      _attackRange(tile);
+      _callUpdateCursor();
       _callUpdateTiles();
     } else if (key == LogicalKeyboardKey.keyE && tile != null) {
       if (tile.hasMachine) {
         tile.machine!.updateDirection(tile.machine!.direction.next());
         tile.updateMachine();
       }
+      _attackRange(tile);
+      _callUpdateCursor();
       _callUpdateTiles();
     }
 
@@ -139,6 +113,9 @@ class BoardController implements IBoardController {
 
     for (var row in tiles) {
       for (var col in row) {
+        if (col.machine == selectedTile.machine) {
+          continue;
+        }
         final colPos = col.position;
         final dist = (position.row - colPos.row).abs() + (position.col - colPos.col).abs();
         if (dist > movementRange || col.hasMachine) {
@@ -150,40 +127,34 @@ class BoardController implements IBoardController {
     }
   }
 
-  void _attackRange() {
-    print('curr $currentTile');
-    Tile? attack;
-    final pos = selectedTile!.machine!.position;
-    switch (selectedTile!.machine!.direction) {
-      case Direction.north:
-        final a = tiles[pos.row][(pos.col + 1)];
-        if (a.hasMachine) {
-          a.updateInAttackRange(true);
-        }
-        break;
-      case Direction.east:
-        final a = tiles[(pos.row + 1)][pos.col];
-        if (a.hasMachine) {
-          a.updateInAttackRange(true);
-        }
-        break;
-      case Direction.south:
-        final a = tiles[pos.row][(pos.col - 1)];
-        if (a.hasMachine) {
-          a.updateInAttackRange(true);
-        }
-        break;
-      case Direction.west:
-        final a = tiles[(pos.row - 1)][pos.col];
-        if (a.hasMachine) {
-          a.updateInAttackRange(true);
-        }
-        break;
-      default:
-        break;
-    }
+  void _attackRange(Tile selectedTile) {
+    final position = selectedTile.position;
+    final attackRange = selectedTile.machine?.attackRange ?? 0;
+    final direction = selectedTile.machine?.direction ?? Direction.north;
+    final player = selectedTile.machine?.player ?? Player.one;
 
-    print('attack $attack');
+// TODO: refinar isso
+    if (direction == Direction.north) {
+      for (var row = 0; row <= (position.row - attackRange); row++) {
+        if ((position.row - row).abs() <= attackRange) {
+          final tileMachine = tiles[row][position.col].machine;
+
+          if (tileMachine != null && tileMachine.player != player) {
+            tiles[row][position.col].updateInAttackRange(true);
+          }
+        }
+      }
+    } else if (direction == Direction.south) {
+      for (var row = tiles.length; row >= (position.row - attackRange); row--) {
+        if ((position.row - row).abs() <= attackRange) {
+          final tileMachine = tiles[row][position.col].machine;
+
+          if (tileMachine != null && tileMachine.player != player) {
+            tiles[row][position.col].updateInAttackRange(true);
+          }
+        }
+      }
+    }
   }
 
   void _callUpdateCursor() {

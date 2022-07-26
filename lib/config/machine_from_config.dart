@@ -9,6 +9,7 @@ class MachineInfo {
   final Player player;
   final int combatPower;
   final int movementRange;
+  final int attackRange;
   final int health;
 
   MachineInfo({
@@ -16,6 +17,7 @@ class MachineInfo {
     required this.player,
     required this.combatPower,
     required this.movementRange,
+    required this.attackRange,
     required this.health,
   });
 }
@@ -36,6 +38,7 @@ class MachineFromConfig {
         name: machineConfig.getName(),
         combatPower: info.combatPower,
         movementRange: info.movementRange,
+        attackRange: info.attackRange,
         health: info.health,
         image: Image.asset(
           machineConfig.getAsset(),

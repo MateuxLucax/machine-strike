@@ -7,4 +7,5 @@
   <combatPower>2</combatPower>
   <health>12</health>
   <movementRange>2</movementRange>
+  <attackRange>2</attackRange>
 </root>

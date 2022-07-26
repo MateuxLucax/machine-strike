@@ -21,6 +21,7 @@ class JsonMachineAdapter implements IMachineAdapter {
       combatPower: json['combatPower'] as int,
       health: json['health'] as int,
       movementRange: json['movementRange'] as int,
+      attackRange: json['attackRange'] as int,
       player: Player.fromId(json['player'] as int),
       position: TilePosition(
         json['row'] as int,

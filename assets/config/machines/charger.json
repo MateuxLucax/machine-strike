@@ -5,5 +5,6 @@
   "player": 1,
   "combatPower": 10,
   "health": 5,
-  "movementRange": 6
+  "movementRange": 6,
+  "attackRange": 3
 }

@@ -52,6 +52,7 @@ class MachineCardWidget extends StatelessWidget {
             _infoItem('Combat power: ', machine.combatPower.toString()),
             _infoItem('Health: ', machine.health.toString()),
             _infoItem('Movement range: ', machine.movementRange.toString()),
+            _infoItem('Attack range: ', machine.attackRange.toString()),
             _infoItem('Machine owner: ', machine.player.toString()),
             _infoItem('Position: ', machine.position.toString()),
             _infoItem('Direction: ', machine.direction.toString()),

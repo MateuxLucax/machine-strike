@@ -9,6 +9,7 @@ class Machine {
   final String name;
   final int combatPower;
   final int movementRange;
+  final int attackRange;
   final int health;
   final Widget image;
   Direction direction;
@@ -20,12 +21,12 @@ class Machine {
     required this.name,
     required this.combatPower,
     required this.movementRange,
+    required this.attackRange,
     required this.health,
     required this.image,
   });
 
   Widget getAsset() {
-    print('assetDirection $direction');
     return RotatedBox(
       key: image.key,
       quarterTurns: direction.value,
@@ -36,4 +37,14 @@ class Machine {
   void updateDirection(Direction direction) {
     this.direction = direction;
   }
+
+  @override
+  operator ==(other) =>
+      other is Machine &&
+      other.name == name &&
+      other.position == position &&
+      other.player == player;
+
+  @override
+  int get hashCode => hashValues(name, position, player);
 }
