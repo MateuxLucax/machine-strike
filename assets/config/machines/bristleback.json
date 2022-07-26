@@ -1,0 +1,9 @@
+{
+  "name": "bristleback",
+  "row": 1,
+  "col": 2,
+  "player": 1,
+  "combatPower": 4,
+  "health": 16,
+  "movementRange": 2
+}

@@ -1,0 +1,9 @@
+{
+  "name": "skydrifter",
+  "row": 7,
+  "col": 0,
+  "player": 2,
+  "combatPower": 2,
+  "health": 12,
+  "movementRange": 4
+}

@@ -8,4 +8,8 @@ enum Player {
   String toString() {
     return 'Player ${this == Player.one ? '1' : '2'}';
   }
+
+  static Player fromId(int id) {
+    return id == 1 ? Player.one : Player.two;
+  }
 }

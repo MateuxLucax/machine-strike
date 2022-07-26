@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../design_patterns/abstract_factory/imachine_factory.dart';
+import '../model/machine.dart';
 
 class MachineCardWidget extends StatelessWidget {
-  final IMachineFactory machine;
+  final Machine machine;
   const MachineCardWidget(this.machine, {Key? key}) : super(key: key);
 
   Widget _infoItem(String description, String value) {
@@ -41,19 +41,20 @@ class MachineCardWidget extends StatelessWidget {
             Align(
               alignment: Alignment.center,
               child: Text(
-                machine.getName(),
+                machine.name,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             const SizedBox(height: 12),
-            _infoItem('Name: ', machine.getName()),
-            _infoItem('Combat power: ', machine.getCombatPower().toString()),
-            _infoItem('Health: ', machine.getHealth().toString()),
-            _infoItem('Movement range: ', machine.getMovementRange().toString()),
-            _infoItem('Machine owner: ', machine.getPlayer().toString()),
-            _infoItem('Position: ', machine.getPosition().toString()),
+            _infoItem('Name: ', machine.name),
+            _infoItem('Combat power: ', machine.combatPower.toString()),
+            _infoItem('Health: ', machine.health.toString()),
+            _infoItem('Movement range: ', machine.movementRange.toString()),
+            _infoItem('Machine owner: ', machine.player.toString()),
+            _infoItem('Position: ', machine.position.toString()),
+            _infoItem('Direction: ', machine.direction.toString()),
           ],
         ),
       ),

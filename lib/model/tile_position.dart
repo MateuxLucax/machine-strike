@@ -12,7 +12,7 @@ class TilePosition {
     return TilePosition(row ?? this.row, col ?? this.col);
   }
 
-  move({int? row, int? col}) {
+  void move({int? row, int? col}) {
     this.row = row != null && _respectLimits((this.row + (row))) ? (this.row + (row)) : this.row;
     this.col = col != null && _respectLimits((this.col + (col))) ? (this.col + (col)) : this.col;
   }

@@ -1,29 +1,34 @@
-import 'package:machinestrike/enum/reachability.dart';
+import 'package:machinestrike/model/machine.dart';
 
-import '../design_patterns/abstract_factory/imachine_factory.dart';
+import '../design_patterns/abstract_factory/igame_factory.dart';
 import '../design_patterns/decorator/tile/tile_stack.dart';
 import '../design_patterns/decorator/tile/tile_stack_decorator.dart';
+import '../enum/direction.dart';
+import '../enum/reachability.dart';
 import 'terrain.dart';
 import 'tile_position.dart';
 
 class Tile {
   TilePosition position;
   Terrain terrain;
-  IMachineFactory? machine;
+  Machine? machine;
   TileStack tileStack = TileStackDecorator([]);
   Reachability? reachability;
+  late Direction direction;
 
   Tile({
     required this.position,
     required this.terrain,
-    this.machine,
+    Direction? direction,
     TileStack? tileStack,
+    this.machine,
   }) {
     if (tileStack == null) {
       this.tileStack.addToStack(terrain.asset);
     } else {
       this.tileStack = tileStack;
     }
+    this.direction = direction ?? Direction.north;
   }
 
   bool get hasMachine => machine != null;
@@ -31,7 +36,8 @@ class Tile {
   Tile copyWith({
     TilePosition? position,
     Terrain? terrain,
-    IMachineFactory? machine,
+    Machine? machine,
+    Direction? direction,
     TileStack? tileStack,
   }) {
     return Tile(
@@ -39,6 +45,7 @@ class Tile {
       terrain: terrain ?? this.terrain,
       machine: machine ?? this.machine,
       tileStack: tileStack ?? this.tileStack,
+      direction: direction ?? this.direction,
     );
   }
 
@@ -57,13 +64,13 @@ class Tile {
     this.reachability = reachability;
   }
 
-  void addMachine(IMachineFactory machine) {
+  void addMachine(Machine machine) {
     this.machine = machine;
     tileStack.addToStack(machine.getAsset());
   }
 
   @override
   String toString() {
-    return '$position - ${machine?.getName()} - ${terrain.name} - ${tileStack.getStack().length}';
+    return '$position - ${machine?.name} - ${terrain.name} - ${tileStack.getStack().length} - $reachability - $direction';
   }
 }

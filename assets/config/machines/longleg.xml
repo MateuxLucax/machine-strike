@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+  <name>longleg</name>
+  <row>5</row>
+  <col>2</col>
+  <player>2</player>
+  <combatPower>5</combatPower>
+  <health>5</health>
+  <movementRange>5</movementRange>
+</root>

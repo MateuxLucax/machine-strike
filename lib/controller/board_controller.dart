@@ -1,15 +1,24 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:machinestrike/design_patterns/decorator/tile/unreachable_decorator.dart';
-import 'package:machinestrike/design_patterns/decorator/tile/reachable_tile_decorator.dart';
-import 'package:machinestrike/enum/reachability.dart';
 
 import '../design_patterns/observer/cursor_observer.dart';
 import '../design_patterns/observer/update_tiles_observer.dart';
+import '../enum/direction.dart';
+import '../enum/reachability.dart';
 import '../model/board.dart';
 import '../model/tile.dart';
 import '../model/tile_position.dart';
-import 'iboard_controller.dart';
+
+abstract class IBoardController {
+  Tile get currentTile;
+
+  List<List<Tile>> get tiles;
+
+  void attachCursorObserver(CursorObserver observer);
+
+  void attachTilesObserver(UpdateTilesObserver observer);
+
+  void handleKeyStroke(RawKeyEvent event);
+}
 
 class BoardController implements IBoardController {
   final Board board;
@@ -65,7 +74,43 @@ class BoardController implements IBoardController {
       _callUpdateTiles();
       _callUpdateCursor();
     } else if (key == LogicalKeyboardKey.keyF && tile != null) {
-      print('attack');
+      print('curr $currentTile');
+      Tile? attack;
+      final pos = currentTile.position;
+      switch (tile.direction) {
+        case Direction.north:
+          final a = tiles[pos.row][(pos.col + 1)];
+          if (a.hasMachine) {
+            attack = a;
+          }
+          break;
+        case Direction.east:
+          final a = tiles[(pos.row + 1)][pos.col];
+          if (a.hasMachine) {
+            attack = a;
+          }
+          break;
+        case Direction.south:
+          final a = tiles[pos.row][(pos.col - 1)];
+          if (a.hasMachine) {
+            attack = a;
+          }
+          break;
+        case Direction.west:
+          final a = tiles[(pos.row - 1)][pos.col];
+          if (a.hasMachine) {
+            attack = a;
+          }
+          break;
+        default:
+          break;
+      }
+
+      print('attack $attack');
+    } else if (key == LogicalKeyboardKey.keyQ && tile != null) {
+      tile.direction.previous();
+    } else if (key == LogicalKeyboardKey.keyE && tile != null) {
+      tile.direction.next();
     }
 
     final reachable = tiles[cursor.row][cursor.col].reachability;
@@ -81,7 +126,7 @@ class BoardController implements IBoardController {
 
   void _reachablePieces(Tile selectedTile) {
     final position = selectedTile.position;
-    final movementRange = selectedTile.machine?.getMovementRange() ?? 0;
+    final movementRange = selectedTile.machine?.movementRange ?? 0;
 
     for (var row in tiles) {
       for (var col in row) {

@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:machinestrike/design_patterns/builder/builders/standard_game_builder.dart';
+import 'package:machinestrike/design_patterns/builder/game.dart';
+import 'package:machinestrike/design_patterns/builder/game_builder.dart';
+import 'package:machinestrike/design_patterns/singleton/boards.dart';
+import 'package:machinestrike/design_patterns/singleton/machines.dart';
+import 'package:machinestrike/enum/player.dart';
+import 'package:machinestrike/view/game_view.dart';
 
-import '../controller/board_controller.dart';
-import '../controller/iboard_controller.dart';
-import '../design_patterns/builder/game.dart';
-import 'board_view.dart';
-import 'left_side_panel_view.dart';
-import 'right_side_panel_view.dart';
-
-class HomeView extends StatelessWidget {
-  final Game game;
-  const HomeView(
-    this.game, {
+class HomeView extends StatefulWidget {
+  const HomeView({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final IBoardController boardController = BoardController(game.board);
+  State<HomeView> createState() => _HomeViewState();
+}
 
+class _HomeViewState extends State<HomeView> {
+  final buttonStyle = ButtonStyle(
+    backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
+    padding: MaterialStateProperty.all(const EdgeInsets.all(24)),
+    textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 24)),
+  );
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Machine Strike'),
@@ -34,32 +41,51 @@ class HomeView extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Row(
         children: [
-          Column(
-            children: const [
-              LeftSidePanelView(),
-            ],
-          ),
           const SizedBox(
             width: 24,
           ),
-          Expanded(
-            child: SingleChildScrollView(
+          SingleChildScrollView(
+            child: Card(
+                child: Padding(
+              padding: const EdgeInsets.all(24),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  BoardView(boardController),
+                  OutlinedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
+                      padding: MaterialStateProperty.all(const EdgeInsets.all(24)),
+                      textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 24)),
+                    ),
+                    child: const Text(
+                      'Start',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () async {
+                      Game game = StandardGameBuilder()
+                          .setBoard(Boards().random())
+                          .setInitialPlayer(Player.one)
+                          .addMachine(Machines().get(0))
+                          .addMachine(Machines().get(1))
+                          .addMachine(Machines().get(2))
+                          .addMachine(Machines().get(3))
+                          .addMachine(Machines().get(4))
+                          .addMachine(Machines().get(5))
+                          .addMachine(Machines().get(6))
+                          .addMachine(Machines().get(7))
+                          .build();
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => GameView(game)),
+                      );
+                    },
+                  ),
                 ],
               ),
-            ),
+            )),
           ),
           const SizedBox(
             width: 24,
-          ),
-          Column(
-            children: [
-              RightSidePanelView(boardController),
-            ],
           ),
         ],
       ),

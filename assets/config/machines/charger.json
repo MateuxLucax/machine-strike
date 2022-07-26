@@ -1,0 +1,9 @@
+{
+  "name": "charger",
+  "row": 7,
+  "col": 0,
+  "player": 1,
+  "combatPower": 10,
+  "health": 5,
+  "movementRange": 6
+}

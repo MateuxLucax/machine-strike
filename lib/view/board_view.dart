@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:machinestrike/design_patterns/decorator/tile/reachable_tile_decorator.dart';
-import 'package:machinestrike/design_patterns/decorator/tile/unreachable_decorator.dart';
-import 'package:machinestrike/enum/reachability.dart';
 
-import '../controller/iboard_controller.dart';
+import '../controller/board_controller.dart';
+import '../design_patterns/decorator/tile/reachable_tile_decorator.dart';
 import '../design_patterns/decorator/tile/select_tile_stack_decorator.dart';
 import '../design_patterns/observer/cursor_observer.dart';
 import '../design_patterns/observer/update_tiles_observer.dart';
+import '../enum/reachability.dart';
 import '../model/tile.dart';
 import '../model/tile_position.dart';
 import '../widget/tile_widget.dart';
@@ -82,19 +81,7 @@ class _BoardViewState extends State<BoardView> implements CursorObserver, Update
                   if (reachability == Reachability.reachable) {
                     widget = TileWidget(
                       widget.tile.copyWith(
-                        tileStack: ReachableTileDecorator(
-                          widget.tile.tileStack.getStack(),
-                          widget.tile.position.toString(),
-                        ),
-                      ),
-                    );
-                  } else {
-                    widget = TileWidget(
-                      widget.tile.copyWith(
-                        tileStack: UnreachableTileDecorator(
-                          widget.tile.tileStack.getStack(),
-                          widget.tile.position.toString(),
-                        ),
+                        tileStack: ReachableTileDecorator(widget.tile.tileStack.getStack()),
                       ),
                     );
                   }

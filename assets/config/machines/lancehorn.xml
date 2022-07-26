@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+  <name>lancehorn</name>
+  <row>7</row>
+  <col>7</col>
+  <player>2</player>
+  <combatPower>2</combatPower>
+  <health>12</health>
+  <movementRange>2</movementRange>
+</root>

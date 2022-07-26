@@ -1,0 +1,9 @@
+{
+  "name": "burrower",
+  "row": 0,
+  "col": 4,
+  "player": 1,
+  "combatPower": 2,
+  "health": 80,
+  "movementRange": 1
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+  <name>screapper</name>
+  <row>5</row>
+  <col>0</col>
+  <player>2</player>
+  <combatPower>1</combatPower>
+  <health>30</health>
+  <movementRange>1</movementRange>
+</root>

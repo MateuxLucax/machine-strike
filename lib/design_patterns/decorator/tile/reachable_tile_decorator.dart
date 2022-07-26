@@ -3,16 +3,13 @@ import 'package:flutter/material.dart';
 import 'tile_stack_decorator.dart';
 
 class ReachableTileDecorator extends TileStackDecorator {
-  final String key;
-
-  ReachableTileDecorator(super.tileStack, this.key);
+  ReachableTileDecorator(super.tileStack);
 
   @override
   List<Widget> getStack() {
     return [
       ...super.getStack(),
       Container(
-        key: Key('unreachable-$key'),
         width: 64,
         height: 64,
         decoration: BoxDecoration(

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+  <name>plowhorn</name>
+  <row>6</row>
+  <col>1</col>
+  <player>2</player>
+  <combatPower>1</combatPower>
+  <health>15</health>
+  <movementRange>3</movementRange>
+</root>

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../controller/iboard_controller.dart';
-import '../design_patterns/abstract_factory/imachine_factory.dart';
+import '../controller/board_controller.dart';
 import '../design_patterns/observer/cursor_observer.dart';
+import '../model/machine.dart';
 import '../model/terrain.dart';
 import '../model/tile.dart';
 import '../model/tile_position.dart';
@@ -21,7 +21,7 @@ class RightSidePanelView extends StatefulWidget {
 }
 
 class _RightSidePanelViewState extends State<RightSidePanelView> implements CursorObserver {
-  IMachineFactory? currentMachine;
+  Machine? currentMachine;
   Terrain? currentTerrain;
 
   @override

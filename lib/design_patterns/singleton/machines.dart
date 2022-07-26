@@ -3,47 +3,47 @@ import 'dart:math';
 
 import 'package:flutter/services.dart';
 
-import '../../model/board.dart';
+import '../../model/machine.dart';
 import '../abstract_factory/factories/csv_xml_game_factory.dart';
 import '../abstract_factory/factories/json_game_factory.dart';
 import '../abstract_factory/igame_factory.dart';
 
-class Boards {
-  static final Boards _singleton = Boards._internal();
+class Machines {
+  static final Machines _singleton = Machines._internal();
 
-  factory Boards() {
+  factory Machines() {
     return _singleton;
   }
 
-  Boards._internal();
+  Machines._internal();
 
-  final List<Board> boards = [];
+  final List<Machine> machines = [];
 
   final Map<String, IGameFactory> factories = {
     'json': JsonGameFactory(),
-    'csv': CsvXmlGameFactory(),
+    'xml': CsvXmlGameFactory(),
   };
 
-  Future<void> loadBoards() async {
+  Future<void> loadMachines() async {
     final Map<String, dynamic> assets =
         jsonDecode(await rootBundle.loadString('AssetManifest.json'));
 
     for (var asset in assets.entries) {
-      if (asset.key.contains('assets/configs/boards/')) {
+      if (asset.key.contains('assets/configs/machines/')) {
         final type = asset.key.split('.').last;
         final factory = factories[type];
         if (factory != null) {
-          boards.add(Board(await factory.getTiles(asset.value)));
+          machines.add(await factory.getMachine(asset.value));
         }
       }
     }
   }
 
-  Board get(int index) {
-    return boards[index];
+  Machine get(int index) {
+    return machines[index];
   }
 
-  Board random() {
-    return get(Random().nextInt(boards.length));
+  Machine random() {
+    return get(Random().nextInt(machines.length));
   }
 }

@@ -1,0 +1,9 @@
+{
+  "name": "grazer",
+  "row": 4,
+  "col": 2,
+  "player": 1,
+  "combatPower": 4,
+  "health": 8,
+  "movementRange": 4
+}

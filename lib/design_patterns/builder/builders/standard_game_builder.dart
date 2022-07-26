@@ -1,21 +1,31 @@
 import '../../../enum/player.dart';
 import '../../../model/board.dart';
-import '../../abstract_factory/imachine_factory.dart';
+import '../../../model/machine.dart';
 import '../../decorator/tile/tile_stack_decorator.dart';
 import '../game.dart';
 import '../game_builder.dart';
 
 class StandardGameBuilder extends GameBuilder {
+  final Map<Player, int> remainingMachines = {
+    Player.one: 3,
+    Player.two: 3,
+  };
+
   @override
-  GameBuilder addMachine(IMachineFactory machine) {
-    final x = machine.getPosition().row;
-    final y = machine.getPosition().col;
-    game.board.tiles[x][y] = game.board.tiles[x][y].copyWith(
-      machine: machine,
-      tileStack: TileStackDecorator(game.board.tiles[x][y].tileStack.getStack()).addToStack(
-        machine.getAsset(),
-      ),
-    );
+  GameBuilder addMachine(Machine machine) {
+    final remaining = remainingMachines[machine.player];
+
+    if (remaining != null && remaining > 0) {
+      final x = machine.position.row;
+      final y = machine.position.col;
+      game.board.tiles[x][y] = game.board.tiles[x][y].copyWith(
+        machine: machine,
+        tileStack: TileStackDecorator(game.board.tiles[x][y].tileStack.getStack()).addToStack(
+          machine.getAsset(),
+        ),
+      );
+      remainingMachines[machine.player] = remaining - 1;
+    }
 
     return this;
   }

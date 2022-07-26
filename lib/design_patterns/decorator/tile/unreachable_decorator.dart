@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'tile_stack_decorator.dart';
 
-class UnreachableTileDecorator extends TileStackDecorator {
+class AttackTileDecorator extends TileStackDecorator {
   final String key;
 
-  UnreachableTileDecorator(super.tileStack, this.key);
+  AttackTileDecorator(super.tileStack, this.key);
 
   @override
   List<Widget> getStack() {

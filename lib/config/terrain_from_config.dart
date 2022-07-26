@@ -1,14 +1,13 @@
 import 'package:flutter/widgets.dart';
 
-import '../../config/terrain_asset_config.dart';
-import '../../model/terrain.dart';
+import '../model/terrain.dart';
 
 class TerrainFromConfig {
   final String config;
 
   TerrainFromConfig(this.config);
 
-  Terrain fromConfig() {
+  Terrain get() {
     TerrainConfig terrainConfig = TerrainConfig.fromId(config);
 
     return Terrain(
@@ -74,4 +73,14 @@ enum TerrainConfig {
   String getName() {
     return '${toString().split('.').last[0].toUpperCase()}${toString().split('.').last.substring(1).toLowerCase()}';
   }
+}
+
+class TerrainAssetConfig {
+  static const folder = 'assets/images/terrains';
+  static const chasm = '$folder/chasm.png';
+  static const forest = '$folder/forest.png';
+  static const grassland = '$folder/grassland.png';
+  static const hill = '$folder/hill.png';
+  static const marsh = '$folder/marsh.png';
+  static const mountain = '$folder/mountain.png';
 }
