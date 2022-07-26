@@ -71,13 +71,14 @@ class BoardController implements IBoardController {
       } else if (tile != null && !currentTile.hasMachine) {
         _reset(tile: tile);
       }
+
       _callUpdateTiles();
       _callUpdateCursor();
     } else if (key == LogicalKeyboardKey.keyF && tile != null) {
       print('curr $currentTile');
       Tile? attack;
       final pos = currentTile.position;
-      switch (tile.direction) {
+      switch (tile.machine!.direction) {
         case Direction.north:
           final a = tiles[pos.row][(pos.col + 1)];
           if (a.hasMachine) {
@@ -108,9 +109,17 @@ class BoardController implements IBoardController {
 
       print('attack $attack');
     } else if (key == LogicalKeyboardKey.keyQ && tile != null) {
-      tile.direction.previous();
+      if (tile.hasMachine) {
+        tile.machine!.updateDirection(tile.machine!.direction.previous());
+        tile.updateMachine();
+      }
+      _callUpdateTiles();
     } else if (key == LogicalKeyboardKey.keyE && tile != null) {
-      tile.direction.next();
+      if (tile.hasMachine) {
+        tile.machine!.updateDirection(tile.machine!.direction.next());
+        tile.updateMachine();
+      }
+      _callUpdateTiles();
     }
 
     final reachable = tiles[cursor.row][cursor.col].reachability;
@@ -141,6 +150,42 @@ class BoardController implements IBoardController {
     }
   }
 
+  void _attackRange() {
+    print('curr $currentTile');
+    Tile? attack;
+    final pos = selectedTile!.machine!.position;
+    switch (selectedTile!.machine!.direction) {
+      case Direction.north:
+        final a = tiles[pos.row][(pos.col + 1)];
+        if (a.hasMachine) {
+          a.updateInAttackRange(true);
+        }
+        break;
+      case Direction.east:
+        final a = tiles[(pos.row + 1)][pos.col];
+        if (a.hasMachine) {
+          a.updateInAttackRange(true);
+        }
+        break;
+      case Direction.south:
+        final a = tiles[pos.row][(pos.col - 1)];
+        if (a.hasMachine) {
+          a.updateInAttackRange(true);
+        }
+        break;
+      case Direction.west:
+        final a = tiles[(pos.row - 1)][pos.col];
+        if (a.hasMachine) {
+          a.updateInAttackRange(true);
+        }
+        break;
+      default:
+        break;
+    }
+
+    print('attack $attack');
+  }
+
   void _callUpdateCursor() {
     for (var observer in cursorObservers) {
       observer.updateCursor(cursor, currentTile);
@@ -163,6 +208,7 @@ class BoardController implements IBoardController {
     for (var row in tiles) {
       for (var col in row) {
         col.updateReachability(null);
+        col.updateInAttackRange(false);
       }
     }
   }

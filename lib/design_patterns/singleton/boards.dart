@@ -29,11 +29,12 @@ class Boards {
         jsonDecode(await rootBundle.loadString('AssetManifest.json'));
 
     for (var asset in assets.entries) {
-      if (asset.key.contains('assets/configs/boards/')) {
+      if (asset.key.contains('assets/config/boards/')) {
         final type = asset.key.split('.').last;
         final factory = factories[type];
         if (factory != null) {
-          boards.add(Board(await factory.getTiles(asset.value)));
+          final tiles = await factory.getTiles(asset.key);
+          boards.add(Board(tiles));
         }
       }
     }

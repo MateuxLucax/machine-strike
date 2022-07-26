@@ -29,11 +29,11 @@ class Machines {
         jsonDecode(await rootBundle.loadString('AssetManifest.json'));
 
     for (var asset in assets.entries) {
-      if (asset.key.contains('assets/configs/machines/')) {
+      if (asset.key.contains('assets/config/machines/')) {
         final type = asset.key.split('.').last;
         final factory = factories[type];
         if (factory != null) {
-          machines.add(await factory.getMachine(asset.value));
+          machines.add(await factory.getMachine(asset.key));
         }
       }
     }

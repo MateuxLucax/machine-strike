@@ -18,14 +18,15 @@ class JsonMachineAdapter implements IMachineAdapter {
     final Map<dynamic, dynamic> json = await _getJsonConfig(file);
 
     final info = MachineInfo(
-        combatPower: json['combatPower'] as int,
-        health: json['health'] as int,
-        movementRange: json['movementRange'] as int,
-        player: Player.fromId(json['player'] as int),
-        position: TilePosition(
-          json['row'] as int,
-          json['col'] as int,
-        ));
+      combatPower: json['combatPower'] as int,
+      health: json['health'] as int,
+      movementRange: json['movementRange'] as int,
+      player: Player.fromId(json['player'] as int),
+      position: TilePosition(
+        json['row'] as int,
+        json['col'] as int,
+      ),
+    );
 
     return MachineFromConfig(json['name']).get(info);
   }

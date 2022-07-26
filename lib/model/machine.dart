@@ -5,13 +5,13 @@ import 'package:machinestrike/model/tile_position.dart';
 
 class Machine {
   final TilePosition position;
-  final Direction direction;
   final Player player;
   final String name;
   final int combatPower;
   final int movementRange;
   final int health;
   final Widget image;
+  Direction direction;
 
   Machine({
     required this.position,
@@ -25,9 +25,15 @@ class Machine {
   });
 
   Widget getAsset() {
+    print('assetDirection $direction');
     return RotatedBox(
+      key: image.key,
       quarterTurns: direction.value,
       child: image,
     );
+  }
+
+  void updateDirection(Direction direction) {
+    this.direction = direction;
   }
 }

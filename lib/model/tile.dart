@@ -1,10 +1,7 @@
-import 'package:machinestrike/model/machine.dart';
-
-import '../design_patterns/abstract_factory/igame_factory.dart';
 import '../design_patterns/decorator/tile/tile_stack.dart';
 import '../design_patterns/decorator/tile/tile_stack_decorator.dart';
-import '../enum/direction.dart';
 import '../enum/reachability.dart';
+import 'machine.dart';
 import 'terrain.dart';
 import 'tile_position.dart';
 
@@ -14,12 +11,12 @@ class Tile {
   Machine? machine;
   TileStack tileStack = TileStackDecorator([]);
   Reachability? reachability;
-  late Direction direction;
+  late bool inAttackRange;
 
   Tile({
     required this.position,
     required this.terrain,
-    Direction? direction,
+    bool? inAttackRange,
     TileStack? tileStack,
     this.machine,
   }) {
@@ -28,7 +25,7 @@ class Tile {
     } else {
       this.tileStack = tileStack;
     }
-    this.direction = direction ?? Direction.north;
+    this.inAttackRange = inAttackRange ?? false;
   }
 
   bool get hasMachine => machine != null;
@@ -37,15 +34,15 @@ class Tile {
     TilePosition? position,
     Terrain? terrain,
     Machine? machine,
-    Direction? direction,
     TileStack? tileStack,
+    bool? inAttackRange,
   }) {
     return Tile(
       position: position ?? this.position,
       terrain: terrain ?? this.terrain,
       machine: machine ?? this.machine,
       tileStack: tileStack ?? this.tileStack,
-      direction: direction ?? this.direction,
+      inAttackRange: inAttackRange ?? this.inAttackRange,
     );
   }
 
@@ -60,17 +57,32 @@ class Tile {
     }
   }
 
-  void updateReachability(Reachability? reachability) {
-    this.reachability = reachability;
-  }
-
   void addMachine(Machine machine) {
     this.machine = machine;
     tileStack.addToStack(machine.getAsset());
   }
 
+  void updateMachine() {
+    final currentMachine = machine;
+    if (currentMachine != null) {
+      final key = currentMachine.getAsset().key;
+      if (key != null) {
+        tileStack.removeFromStack(key);
+        tileStack.addToStack(currentMachine.getAsset());
+      }
+    }
+  }
+
+  void updateReachability(Reachability? reachability) {
+    this.reachability = reachability;
+  }
+
+  void updateInAttackRange(bool inAttackRange) {
+    this.inAttackRange = inAttackRange;
+  }
+
   @override
   String toString() {
-    return '$position - ${machine?.name} - ${terrain.name} - ${tileStack.getStack().length} - $reachability - $direction';
+    return '$position - ${machine?.name} - ${terrain.name} - ${tileStack.getStack().length} - $reachability';
   }
 }

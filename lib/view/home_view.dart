@@ -23,8 +23,30 @@ class _HomeViewState extends State<HomeView> {
     textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 24)),
   );
 
+  void _onPressed() {
+    Game game = StandardGameBuilder()
+        .setBoard(Boards().random())
+        .setInitialPlayer(Player.one)
+        .addMachine(Machines().get(0))
+        .addMachine(Machines().get(1))
+        .addMachine(Machines().get(2))
+        .addMachine(Machines().get(3))
+        .addMachine(Machines().get(4))
+        .addMachine(Machines().get(5))
+        .addMachine(Machines().get(6))
+        .addMachine(Machines().get(7))
+        .build();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => GameView(game)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    Future.delayed(const Duration(milliseconds: 1), _onPressed);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Machine Strike'),
@@ -56,29 +78,11 @@ class _HomeViewState extends State<HomeView> {
                       padding: MaterialStateProperty.all(const EdgeInsets.all(24)),
                       textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 24)),
                     ),
+                    onPressed: _onPressed,
                     child: const Text(
                       'Start',
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: () async {
-                      Game game = StandardGameBuilder()
-                          .setBoard(Boards().random())
-                          .setInitialPlayer(Player.one)
-                          .addMachine(Machines().get(0))
-                          .addMachine(Machines().get(1))
-                          .addMachine(Machines().get(2))
-                          .addMachine(Machines().get(3))
-                          .addMachine(Machines().get(4))
-                          .addMachine(Machines().get(5))
-                          .addMachine(Machines().get(6))
-                          .addMachine(Machines().get(7))
-                          .build();
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => GameView(game)),
-                      );
-                    },
                   ),
                 ],
               ),

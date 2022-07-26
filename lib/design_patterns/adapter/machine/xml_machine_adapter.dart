@@ -15,17 +15,19 @@ class XmlMachineAdapter implements IMachineAdapter {
   @override
   Future<Machine> getMachine(String file) async {
     final XmlDocument document = await _getDocument(file);
+    final root = document.rootElement;
 
     final info = MachineInfo(
-        combatPower: document.getElement('combatPower')?.text as int? ?? 0,
-        health: document.getElement('health')?.text as int? ?? 0,
-        movementRange: document.getElement('movementRange')?.text as int? ?? 0,
-        player: Player.fromId(document.getElement('player')?.text as int? ?? 0),
-        position: TilePosition(
-          document.getElement('row')?.text as int? ?? 0,
-          document.getElement('col')?.text as int? ?? 0,
-        ));
+      combatPower: int.parse(root.getElement('combatPower')?.text ?? '0'),
+      health: int.parse(root.getElement('health')?.text ?? '0'),
+      movementRange: int.parse(root.getElement('movementRange')?.text ?? '0'),
+      player: Player.fromId(int.parse(root.getElement('player')?.text ?? '0')),
+      position: TilePosition(
+        int.parse(root.getElement('row')?.text ?? '0'),
+        int.parse(root.getElement('col')?.text ?? '0'),
+      ),
+    );
 
-    return MachineFromConfig(document.getElement('name')?.text ?? '').get(info);
+    return MachineFromConfig(root.getElement('name')?.text ?? '').get(info);
   }
 }

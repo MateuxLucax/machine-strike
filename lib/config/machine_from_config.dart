@@ -26,21 +26,26 @@ class MachineFromConfig {
   MachineFromConfig(this.config);
 
   Machine get(MachineInfo info) {
-    MachineConfig machineConfig = MachineConfig.fromId(config);
+    try {
+      MachineConfig machineConfig = MachineConfig.fromId(config);
 
-    return Machine(
-      position: info.position,
-      direction: Direction.north,
-      player: info.player,
-      name: machineConfig.getName(),
-      combatPower: info.combatPower,
-      movementRange: info.movementRange,
-      health: info.health,
-      image: Image.asset(
-        machineConfig.getAsset(),
-        fit: BoxFit.fill,
-      ),
-    );
+      return Machine(
+        position: info.position,
+        direction: Direction.north,
+        player: info.player,
+        name: machineConfig.getName(),
+        combatPower: info.combatPower,
+        movementRange: info.movementRange,
+        health: info.health,
+        image: Image.asset(
+          machineConfig.getAsset(),
+          fit: BoxFit.fill,
+          key: Key(machineConfig.getName() + info.position.toString()),
+        ),
+      );
+    } catch (_) {
+      rethrow;
+    }
   }
 
   static Image _fromAsset(String asset) {
@@ -87,7 +92,7 @@ enum MachineConfig {
   skydrifter;
 
   factory MachineConfig.fromId(String value) {
-    return values.firstWhere((e) => e.toString() == value);
+    return values.firstWhere((e) => e.name == value);
   }
 
   String getAsset() {

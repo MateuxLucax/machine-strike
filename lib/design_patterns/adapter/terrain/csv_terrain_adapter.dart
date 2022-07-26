@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/services.dart';
 
 import '../../../config/game_config.dart';
@@ -9,7 +7,7 @@ import '../iterrain_adapter.dart';
 
 class CsvTerrainAdapter implements ITerrainAdapter {
   Future<List<String>> _getFile(String file) async {
-    return jsonDecode(await rootBundle.loadString(file));
+    return (await rootBundle.loadString(file)).split('\n');
   }
 
   @override
