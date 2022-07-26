@@ -8,5 +8,5 @@ abstract class TileStack {
 
   TileStack addToStack(Widget widget);
 
-  TileStack removeFromStack(Widget widget);
+  TileStack removeFromStack(Key key);
 }

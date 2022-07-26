@@ -9,6 +9,6 @@ class Board {
   });
 
   Tile getByPosition(TilePosition position) {
-    return tiles[position.x][position.y];
+    return tiles[position.row][position.col];
   }
 }

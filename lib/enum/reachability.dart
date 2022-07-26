@@ -1,0 +1,4 @@
+enum Reachability {
+  reachable,
+  unreachable,
+}

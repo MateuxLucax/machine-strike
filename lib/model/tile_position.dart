@@ -3,30 +3,30 @@ import 'dart:ui';
 import '../config/game_config.dart';
 
 class TilePosition {
-  int x;
-  int y;
+  int row;
+  int col;
 
-  TilePosition(this.x, this.y);
+  TilePosition(this.row, this.col);
 
-  TilePosition copyWith({int? x, int? y}) {
-    return TilePosition(x ?? this.x, y ?? this.y);
+  TilePosition copyWith({int? row, int? col}) {
+    return TilePosition(row ?? this.row, col ?? this.col);
   }
 
-  move({int? x, int? y}) {
-    this.x = x != null && _respectLimits((this.x + (x))) ? (this.x + (x)) : this.x;
-    this.y = y != null && _respectLimits((this.y + (y))) ? (this.y + (y)) : this.y;
+  move({int? row, int? col}) {
+    this.row = row != null && _respectLimits((this.row + (row))) ? (this.row + (row)) : this.row;
+    this.col = col != null && _respectLimits((this.col + (col))) ? (this.col + (col)) : this.col;
   }
 
   bool _respectLimits(int val) => !val.isNegative && val < GameConst.size;
 
   @override
-  operator ==(other) => other is TilePosition && other.x == x && other.y == y;
+  operator ==(other) => other is TilePosition && other.row == row && other.col == col;
 
   @override
-  int get hashCode => hashValues('$x-', y);
+  int get hashCode => hashValues('$row-', col);
 
   @override
   String toString() {
-    return '[$x][$y]';
+    return '[$row][$col]';
   }
 }

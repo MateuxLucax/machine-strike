@@ -8,8 +8,8 @@ import '../game_builder.dart';
 class StandardGameBuilder extends GameBuilder {
   @override
   GameBuilder addMachine(IMachineFactory machine) {
-    final x = machine.getPosition().x;
-    final y = machine.getPosition().y;
+    final x = machine.getPosition().row;
+    final y = machine.getPosition().col;
     game.board.tiles[x][y] = game.board.tiles[x][y].copyWith(
       machine: machine,
       tileStack: TileStackDecorator(game.board.tiles[x][y].tileStack.getStack()).addToStack(

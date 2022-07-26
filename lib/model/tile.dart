@@ -1,3 +1,5 @@
+import 'package:machinestrike/enum/reachability.dart';
+
 import '../design_patterns/abstract_factory/imachine_factory.dart';
 import '../design_patterns/decorator/tile/tile_stack.dart';
 import '../design_patterns/decorator/tile/tile_stack_decorator.dart';
@@ -9,6 +11,7 @@ class Tile {
   Terrain terrain;
   IMachineFactory? machine;
   TileStack tileStack = TileStackDecorator([]);
+  Reachability? reachability;
 
   Tile({
     required this.position,
@@ -42,9 +45,16 @@ class Tile {
   void unsetMachine() {
     final currentMachine = machine;
     if (currentMachine != null) {
-      tileStack.removeFromStack(currentMachine.getAsset());
+      final key = currentMachine.getAsset().key;
+      if (key != null) {
+        tileStack.removeFromStack(key);
+      }
       machine = null;
     }
+  }
+
+  void updateReachability(Reachability? reachability) {
+    this.reachability = reachability;
   }
 
   void addMachine(IMachineFactory machine) {

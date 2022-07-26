@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:machinestrike/design_patterns/decorator/tile/reachable_tile_decorator.dart';
+import 'package:machinestrike/design_patterns/decorator/tile/unreachable_decorator.dart';
+import 'package:machinestrike/enum/reachability.dart';
 
 import '../controller/iboard_controller.dart';
 import '../design_patterns/decorator/tile/select_tile_stack_decorator.dart';
@@ -72,7 +75,33 @@ class _BoardViewState extends State<BoardView> implements CursorObserver, Update
               ),
               padding: const EdgeInsets.all(0),
               itemCount: tileWidgets.length,
-              itemBuilder: (context, index) => widgets[index],
+              itemBuilder: (context, index) {
+                var widget = widgets[index];
+                final reachability = widget.tile.reachability;
+                if (reachability != null) {
+                  if (reachability == Reachability.reachable) {
+                    widget = TileWidget(
+                      widget.tile.copyWith(
+                        tileStack: ReachableTileDecorator(
+                          widget.tile.tileStack.getStack(),
+                          widget.tile.position.toString(),
+                        ),
+                      ),
+                    );
+                  } else {
+                    widget = TileWidget(
+                      widget.tile.copyWith(
+                        tileStack: UnreachableTileDecorator(
+                          widget.tile.tileStack.getStack(),
+                          widget.tile.position.toString(),
+                        ),
+                      ),
+                    );
+                  }
+                }
+
+                return widget;
+              },
             ),
           ),
         ),

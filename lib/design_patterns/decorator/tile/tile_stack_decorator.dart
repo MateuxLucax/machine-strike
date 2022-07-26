@@ -20,9 +20,9 @@ class TileStackDecorator extends TileStack {
   }
 
   @override
-  TileStack removeFromStack(Widget widget) {
+  TileStack removeFromStack(Key key) {
     tileStack.removeWhere((tile) {
-      return tile.key == widget.key;
+      return tile.key == key;
     });
 
     return this;
