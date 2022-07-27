@@ -1,7 +1,7 @@
 import '../../../enum/player.dart';
 import '../../../model/board.dart';
 import '../../../model/machine.dart';
-import '../../decorator/tile/tile_stack_decorator.dart';
+import '../../decorator/tile/add_widget_on_stack_decorator.dart';
 import '../game.dart';
 import '../game_builder.dart';
 
@@ -20,7 +20,8 @@ class StandardGameBuilder extends GameBuilder {
       final y = machine.position.col;
       game.board.tiles[x][y] = game.board.tiles[x][y].copyWith(
         machine: machine,
-        tileStack: TileStackDecorator(game.board.tiles[x][y].tileStack.getStack()).addToStack(
+        tileStack: AddWidgetOnStackDecorator(
+          game.board.tiles[x][y].tileStack,
           machine.getAsset(),
         ),
       );

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'tile_stack_decorator.dart';
 
-class AddElementOnStackDecorator extends TileStackDecorator {
+class AddWidgetOnStackDecorator extends TileStackDecorator {
   final Widget widget;
 
-  AddElementOnStackDecorator(
+  AddWidgetOnStackDecorator(
     super.tileStack,
     this.widget,
   );

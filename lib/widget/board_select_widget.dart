@@ -17,7 +17,7 @@ class BoardSelectWidget extends StatelessWidget {
     List<TileWidget> newTiles = [];
     for (var row in tiles) {
       for (var column in row) {
-        newTiles.add(TileWidget(column));
+        newTiles.add(TileWidget(column.tileStack));
       }
     }
 

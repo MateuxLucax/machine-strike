@@ -6,6 +6,7 @@ import '../../adapter/imachine_adapter.dart';
 import '../../adapter/iterrain_adapter.dart';
 import '../../adapter/machine/json_machine_adapter.dart';
 import '../../adapter/terrain/json_terrain_adapter.dart';
+import '../../decorator/tile/base_tile_stack.dart';
 import '../igame_factory.dart';
 
 class JsonGameFactory implements IGameFactory {
@@ -24,6 +25,7 @@ class JsonGameFactory implements IGameFactory {
           Tile(
             position: TilePosition(x, y),
             terrain: terrains[x][y],
+            tileStack: BaseTileStack(terrains[x][y].asset),
           ),
         );
       }

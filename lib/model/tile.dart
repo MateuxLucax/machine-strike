@@ -1,5 +1,7 @@
+import '../design_patterns/decorator/tile/add_widget_on_stack_decorator.dart';
+import 'package:machinestrike/design_patterns/decorator/tile/base_tile_stack.dart';
+
 import '../design_patterns/decorator/tile/tile_stack.dart';
-import '../design_patterns/decorator/tile/tile_stack_decorator.dart';
 import '../enum/reachability.dart';
 import 'machine.dart';
 import 'terrain.dart';
@@ -9,22 +11,17 @@ class Tile {
   TilePosition position;
   Terrain terrain;
   Machine? machine;
-  TileStack tileStack = TileStackDecorator([]);
   Reachability? reachability;
+  TileStack tileStack;
   late bool inAttackRange;
 
   Tile({
     required this.position,
     required this.terrain,
+    required this.tileStack,
     bool? inAttackRange,
-    TileStack? tileStack,
     this.machine,
   }) {
-    if (tileStack == null) {
-      this.tileStack.addToStack(terrain.asset);
-    } else {
-      this.tileStack = tileStack;
-    }
     this.inAttackRange = inAttackRange ?? false;
   }
 
@@ -51,7 +48,7 @@ class Tile {
     if (currentMachine != null) {
       final key = currentMachine.getAsset().key;
       if (key != null) {
-        tileStack.removeFromStack(key);
+        tileStack = BaseTileStack(terrain.asset);
       }
       machine = null;
     }
@@ -59,17 +56,15 @@ class Tile {
 
   void addMachine(Machine machine) {
     this.machine = machine;
-    tileStack.addToStack(machine.getAsset());
+    tileStack = AddWidgetOnStackDecorator(tileStack, machine.getAsset());
   }
 
   void updateMachine() {
+    // maybe do a rotate decorator
     final currentMachine = machine;
     if (currentMachine != null) {
-      final key = currentMachine.getAsset().key;
-      if (key != null) {
-        tileStack.removeFromStack(key);
-        tileStack.addToStack(currentMachine.getAsset());
-      }
+      tileStack = BaseTileStack(terrain.asset);
+      tileStack = AddWidgetOnStackDecorator(tileStack, currentMachine.getAsset());
     }
   }
 

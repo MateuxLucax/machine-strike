@@ -23,14 +23,14 @@ class BoardView extends StatefulWidget {
 }
 
 class _BoardViewState extends State<BoardView> implements CursorObserver, UpdateTilesObserver {
-  List<TileWidget> tileWidgets = [];
+  List<Tile> tiles = [];
   int cursorPosition = 0;
 
-  List<TileWidget> _tilesToWidgets(List<List<Tile>> tiles) {
-    List<TileWidget> newTiles = [];
+  List<Tile> _matrixToList(List<List<Tile>> tiles) {
+    List<Tile> newTiles = [];
     for (var row in tiles) {
       for (var column in row) {
-        newTiles.add(TileWidget(column));
+        newTiles.add(column);
       }
     }
 
@@ -40,18 +40,17 @@ class _BoardViewState extends State<BoardView> implements CursorObserver, Update
   @override
   void initState() {
     super.initState();
-    tileWidgets = _tilesToWidgets(widget.controller.tiles);
+    tiles = _matrixToList(widget.controller.tiles);
     widget.controller.attachCursorObserver(this);
     widget.controller.attachTilesObserver(this);
   }
 
   @override
   Widget build(BuildContext context) {
-    var widgets = [...tileWidgets];
-    widgets[cursorPosition] = TileWidget(
-      widgets[cursorPosition].tile.copyWith(
-            tileStack: SelectTileStackDecorator(widgets[cursorPosition].tile.tileStack.getStack()),
-          ),
+    print('rebuilding');
+    List<Tile> tilesClone = [...tiles];
+    tilesClone[cursorPosition] = tilesClone[cursorPosition].copyWith(
+      tileStack: SelectTileStackDecorator(tilesClone[cursorPosition].tileStack),
     );
 
     return RawKeyboardListener(
@@ -74,28 +73,17 @@ class _BoardViewState extends State<BoardView> implements CursorObserver, Update
                 crossAxisSpacing: 4,
               ),
               padding: const EdgeInsets.all(0),
-              itemCount: tileWidgets.length,
+              itemCount: tiles.length,
               itemBuilder: (context, index) {
-                var widget = widgets[index];
-                final reachability = widget.tile.reachability;
-                if (reachability != null) {
-                  if (reachability == Reachability.reachable) {
-                    widget = TileWidget(
-                      widget.tile.copyWith(
-                        tileStack: ReachableTileDecorator(widget.tile.tileStack.getStack()),
-                      ),
-                    );
-                  }
+                var tile = TileWidget(tilesClone[index].tileStack);
+                if (tilesClone[index].reachability == Reachability.reachable) {
+                  tile = TileWidget(ReachableTileDecorator(tile.tileStack));
                 }
-                if (widget.tile.inAttackRange) {
-                  widget = TileWidget(
-                    widget.tile.copyWith(
-                      tileStack: AttackTileDecorator(widget.tile.tileStack.getStack()),
-                    ),
-                  );
+                if (tilesClone[index].inAttackRange) {
+                  tile = TileWidget(AttackTileDecorator(tile.tileStack));
                 }
 
-                return widget;
+                return tile;
               },
             ),
           ),
@@ -107,14 +95,14 @@ class _BoardViewState extends State<BoardView> implements CursorObserver, Update
   @override
   void updateCursor(TilePosition cursor, Tile? terrain) {
     setState(() {
-      cursorPosition = tileWidgets.indexWhere((widget) => widget.tile.position == cursor);
+      cursorPosition = tiles.indexWhere((tile) => tile.position == cursor);
     });
   }
 
   @override
   void update(List<List<Tile>> tiles) {
     setState(() {
-      tileWidgets = _tilesToWidgets(tiles);
+      this.tiles = _matrixToList(tiles);
     });
   }
 }

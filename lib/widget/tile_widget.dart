@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../model/tile.dart';
+import '../design_patterns/decorator/tile/tile_stack.dart';
 
 class TileWidget extends StatelessWidget {
-  final Tile tile;
+  final TileStack tileStack;
 
   const TileWidget(
-    this.tile, {
+    this.tileStack, {
     Key? key,
   }) : super(key: key);
 
@@ -18,7 +18,7 @@ class TileWidget extends StatelessWidget {
       color: Colors.black,
       child: Stack(
         alignment: Alignment.center,
-        children: tile.tileStack.getStack(),
+        children: tileStack.getStack(),
       ),
     );
   }
