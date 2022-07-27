@@ -106,6 +106,7 @@ class BoardController implements IBoardController {
           }
         }
       }
+      _callUpdateCursor();
       _callUpdateTiles();
     } else if (key == LogicalKeyboardKey.keyQ && tile != null) {
       if (tile.hasMachine) {

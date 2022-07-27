@@ -20,6 +20,7 @@ class GameView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Machine Strike'),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: const Icon(Icons.help_outline_sharp),

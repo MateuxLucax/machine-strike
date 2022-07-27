@@ -47,4 +47,6 @@ class Boards {
   Board random() {
     return get(Random().nextInt(boards.length));
   }
+
+  List<Board> get all => boards;
 }
