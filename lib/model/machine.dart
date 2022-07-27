@@ -10,8 +10,8 @@ class Machine {
   final int combatPower;
   final int movementRange;
   final int attackRange;
-  final int health;
   final Widget image;
+  int health;
   Direction direction;
 
   Machine({
@@ -37,6 +37,12 @@ class Machine {
   void updateDirection(Direction direction) {
     this.direction = direction;
   }
+
+  void receiveAttack(int attack) {
+    health -= attack;
+  }
+
+  bool get dead => health <= 0;
 
   @override
   operator ==(other) =>

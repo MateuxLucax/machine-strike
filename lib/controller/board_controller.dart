@@ -36,6 +36,10 @@ class BoardController implements IBoardController {
   @override
   List<List<Tile>> get tiles => board.tiles;
 
+  // get tilesInAttackRange {
+  //   return board.tiles.where((row) => row.where((col) => col.inAttackRange)).toList();
+  // }
+
   @override
   void attachCursorObserver(CursorObserver observer) {
     cursorObservers.add(observer);
@@ -76,7 +80,27 @@ class BoardController implements IBoardController {
       _callUpdateTiles();
       _callUpdateCursor();
     } else if (key == LogicalKeyboardKey.keyF && tile != null) {
-      _attackRange(tile);
+      final attack = tile.machine?.combatPower ?? 0 + (tile.terrain.combatPowerOffset);
+      for (var row in tiles) {
+        for (var col in row) {
+          if (col.inAttackRange) {
+            if (col.machine!.combatPower == tile.machine!.combatPower) {
+              col.machine?.receiveAttack(1);
+              tile.machine?.receiveAttack(1);
+            } else if (col.machine!.combatPower > tile.machine!.combatPower) {
+              tile.machine?.receiveAttack(attack);
+            } else {
+              col.machine?.receiveAttack(attack);
+            }
+
+            if (col.machine?.dead ?? false) {
+              col.unsetMachine();
+              _attackRange(tile);
+              _reachablePieces(tile);
+            }
+          }
+        }
+      }
       _callUpdateTiles();
     } else if (key == LogicalKeyboardKey.keyQ && tile != null) {
       if (tile.hasMachine) {
@@ -128,14 +152,14 @@ class BoardController implements IBoardController {
   }
 
   void _attackRange(Tile selectedTile) {
+    _resetAttackRange();
     final position = selectedTile.position;
     final attackRange = selectedTile.machine?.attackRange ?? 0;
     final direction = selectedTile.machine?.direction ?? Direction.north;
     final player = selectedTile.machine?.player ?? Player.one;
 
-// TODO: refinar isso
     if (direction == Direction.north) {
-      for (var row = 0; row <= (position.row - attackRange); row++) {
+      for (var row = 0; row <= (position.row - attackRange).abs(); row++) {
         if ((position.row - row).abs() <= attackRange) {
           final tileMachine = tiles[row][position.col].machine;
 
@@ -145,12 +169,32 @@ class BoardController implements IBoardController {
         }
       }
     } else if (direction == Direction.south) {
-      for (var row = tiles.length; row >= (position.row - attackRange); row--) {
+      for (var row = tiles.length; row >= (position.row - attackRange).abs(); row--) {
         if ((position.row - row).abs() <= attackRange) {
           final tileMachine = tiles[row][position.col].machine;
 
           if (tileMachine != null && tileMachine.player != player) {
             tiles[row][position.col].updateInAttackRange(true);
+          }
+        }
+      }
+    } else if (direction == Direction.east) {
+      for (var col = tiles.length; col >= (position.row - attackRange).abs(); col--) {
+        if ((position.col - col).abs() <= attackRange) {
+          final tileMachine = tiles[position.row][col].machine;
+
+          if (tileMachine != null && tileMachine.player != player) {
+            tiles[position.row][col].updateInAttackRange(true);
+          }
+        }
+      }
+    } else if (direction == Direction.west) {
+      for (var col = 0; col <= (position.col - attackRange).abs(); col++) {
+        if ((position.col - col).abs() <= attackRange) {
+          final tileMachine = tiles[position.row][col].machine;
+
+          if (tileMachine != null && tileMachine.player != player) {
+            tiles[position.row][col].updateInAttackRange(true);
           }
         }
       }
@@ -179,6 +223,14 @@ class BoardController implements IBoardController {
     for (var row in tiles) {
       for (var col in row) {
         col.updateReachability(null);
+        col.updateInAttackRange(false);
+      }
+    }
+  }
+
+  void _resetAttackRange() {
+    for (var row in tiles) {
+      for (var col in row) {
         col.updateInAttackRange(false);
       }
     }

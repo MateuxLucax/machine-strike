@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:machinestrike/design_patterns/builder/builders/standard_game_builder.dart';
-import 'package:machinestrike/design_patterns/builder/game.dart';
-import 'package:machinestrike/design_patterns/builder/game_builder.dart';
-import 'package:machinestrike/design_patterns/singleton/boards.dart';
-import 'package:machinestrike/design_patterns/singleton/machines.dart';
-import 'package:machinestrike/enum/player.dart';
-import 'package:machinestrike/view/game_view.dart';
+
+import '../design_patterns/builder/builders/standard_game_builder.dart';
+import '../design_patterns/builder/game.dart';
+import '../design_patterns/singleton/boards.dart';
+import '../design_patterns/singleton/machines.dart';
+import '../enum/player.dart';
+import 'game_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({
@@ -68,25 +68,26 @@ class _HomeViewState extends State<HomeView> {
           ),
           SingleChildScrollView(
             child: Card(
-                child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                children: [
-                  OutlinedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
-                      padding: MaterialStateProperty.all(const EdgeInsets.all(24)),
-                      textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 24)),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    OutlinedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
+                        padding: MaterialStateProperty.all(const EdgeInsets.all(24)),
+                        textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 24)),
+                      ),
+                      onPressed: _onPressed,
+                      child: const Text(
+                        'Start',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                    onPressed: _onPressed,
-                    child: const Text(
-                      'Start',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            )),
+            ),
           ),
           const SizedBox(
             width: 24,
