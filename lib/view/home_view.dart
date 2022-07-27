@@ -34,24 +34,19 @@ class _HomeViewState extends State<HomeView> {
         child: Column(
           children: [
             Text(
-              'Select which board you want to play in',
+              'Select which board you want to play!',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: theme.colorScheme.onSecondary,
-                fontSize: theme.textTheme.headline6?.fontSize,
+                fontSize: theme.textTheme.bodyText1?.fontSize,
               ),
             ),
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  width: maxW,
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    children: Boards().all.map((board) => BoardSelectWidget(board)).toList(),
-                  ),
-                ),
-              ],
+            Container(
+              padding: const EdgeInsets.all(24),
+              width: maxW,
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                children: Boards().all.map((board) => BoardSelectWidget(board)).toList(),
+              ),
             ),
           ],
         ),
