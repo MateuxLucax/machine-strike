@@ -70,9 +70,7 @@ class BoardSelectWidget extends StatelessWidget {
                     ),
                     padding: const EdgeInsets.all(0),
                     itemCount: widgets.length,
-                    itemBuilder: (context, index) {
-                      return widgets[index];
-                    },
+                    itemBuilder: (context, index) => widgets[index],
                   ),
                 ),
               ),

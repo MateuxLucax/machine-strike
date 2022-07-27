@@ -36,10 +36,6 @@ class BoardController implements IBoardController {
   @override
   List<List<Tile>> get tiles => board.tiles;
 
-  // get tilesInAttackRange {
-  //   return board.tiles.where((row) => row.where((col) => col.inAttackRange)).toList();
-  // }
-
   @override
   void attachCursorObserver(CursorObserver observer) {
     cursorObservers.add(observer);
@@ -110,7 +106,7 @@ class BoardController implements IBoardController {
     } else if (key == LogicalKeyboardKey.keyQ && tile != null) {
       if (tile.hasMachine) {
         tile.machine!.updateDirection(tile.machine!.direction.previous());
-        tile.updateMachine();
+        tile.rotateMachine();
       }
       _attackRange(tile);
       _callUpdateCursor();
@@ -118,7 +114,7 @@ class BoardController implements IBoardController {
     } else if (key == LogicalKeyboardKey.keyE && tile != null) {
       if (tile.hasMachine) {
         tile.machine!.updateDirection(tile.machine!.direction.next());
-        tile.updateMachine();
+        tile.rotateMachine();
       }
       _attackRange(tile);
       _callUpdateCursor();

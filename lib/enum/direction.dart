@@ -1,11 +1,11 @@
 enum Direction {
   north(0),
-  east(45),
-  south(90),
-  west(135);
+  east(0.25),
+  south(0.5),
+  west(0.75);
 
   const Direction(this.value);
-  final int value;
+  final double value;
 
   Direction next() {
     switch (this) {

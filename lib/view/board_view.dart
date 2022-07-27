@@ -47,12 +47,6 @@ class _BoardViewState extends State<BoardView> implements CursorObserver, Update
 
   @override
   Widget build(BuildContext context) {
-    print('rebuilding');
-    List<Tile> tilesClone = [...tiles];
-    tilesClone[cursorPosition] = tilesClone[cursorPosition].copyWith(
-      tileStack: SelectTileStackDecorator(tilesClone[cursorPosition].tileStack),
-    );
-
     return RawKeyboardListener(
       focusNode: FocusNode(),
       autofocus: true,
@@ -72,18 +66,20 @@ class _BoardViewState extends State<BoardView> implements CursorObserver, Update
                 mainAxisSpacing: 4,
                 crossAxisSpacing: 4,
               ),
-              padding: const EdgeInsets.all(0),
               itemCount: tiles.length,
               itemBuilder: (context, index) {
-                var tile = TileWidget(tilesClone[index].tileStack);
-                if (tilesClone[index].reachability == Reachability.reachable) {
-                  tile = TileWidget(ReachableTileDecorator(tile.tileStack));
+                final tile = tiles[index];
+                if (index == cursorPosition) {
+                  return TileWidget(SelectTileStackDecorator((tiles[cursorPosition].tileStack)));
                 }
-                if (tilesClone[index].inAttackRange) {
-                  tile = TileWidget(AttackTileDecorator(tile.tileStack));
+                if (tile.reachability == Reachability.reachable) {
+                  return TileWidget(ReachableTileDecorator(tile.tileStack));
+                }
+                if (tile.inAttackRange) {
+                  return TileWidget(AttackTileDecorator(tile.tileStack));
                 }
 
-                return tile;
+                return TileWidget(tile.tileStack);
               },
             ),
           ),

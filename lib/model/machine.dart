@@ -30,9 +30,10 @@ class Machine {
   });
 
   Widget getAsset() {
-    return RotatedBox(
+    return AnimatedRotation(
       key: image.key,
-      quarterTurns: direction.value,
+      turns: direction.value,
+      duration: const Duration(milliseconds: 150),
       child: image,
     );
   }
@@ -48,11 +49,7 @@ class Machine {
   bool get dead => health <= 0;
 
   @override
-  operator ==(other) =>
-      other is Machine &&
-      other.name == name &&
-      other.position == position &&
-      other.player == player;
+  operator ==(other) => other is Machine && other.name == name && other.position == position && other.player == player;
 
   @override
   int get hashCode => hashValues(name, position, player);

@@ -1,6 +1,5 @@
 import '../design_patterns/decorator/tile/add_widget_on_stack_decorator.dart';
-import 'package:machinestrike/design_patterns/decorator/tile/base_tile_stack.dart';
-
+import '../design_patterns/decorator/tile/base_tile_stack.dart';
 import '../design_patterns/decorator/tile/tile_stack.dart';
 import '../enum/reachability.dart';
 import 'machine.dart';
@@ -59,8 +58,7 @@ class Tile {
     tileStack = AddWidgetOnStackDecorator(tileStack, machine.getAsset());
   }
 
-  void updateMachine() {
-    // maybe do a rotate decorator
+  void rotateMachine() {
     final currentMachine = machine;
     if (currentMachine != null) {
       tileStack = BaseTileStack(terrain.asset);
