@@ -21,6 +21,7 @@ class XmlMachineAdapter implements IMachineAdapter {
       combatPower: int.parse(root.getElement('combatPower')?.text ?? '0'),
       health: int.parse(root.getElement('health')?.text ?? '0'),
       movementRange: int.parse(root.getElement('movementRange')?.text ?? '0'),
+      victoryPoints: int.parse(root.getElement('victoryPoints')?.text ?? '0'),
       attackRange: int.parse(root.getElement('attackRange')?.text ?? '0'),
       player: Player.fromId(int.parse(root.getElement('player')?.text ?? '0')),
       position: TilePosition(

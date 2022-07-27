@@ -4,8 +4,9 @@
   <row>7</row>
   <col>7</col>
   <player>2</player>
-  <combatPower>2</combatPower>
-  <health>12</health>
+  <combatPower>12</combatPower>
+  <health>42</health>
   <movementRange>2</movementRange>
   <attackRange>2</attackRange>
+  <victoryPoints>4</victoryPoints>
 </root>

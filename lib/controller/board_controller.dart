@@ -79,7 +79,7 @@ class BoardController implements IBoardController {
       }
       _callUpdateTiles();
       _callUpdateCursor();
-    } else if (key == LogicalKeyboardKey.keyF && tile != null) {
+    } else if (key == LogicalKeyboardKey.keyK && tile != null) {
       final attack = tile.machine?.combatPower ?? 0 + (tile.terrain.combatPowerOffset);
       for (var row in tiles) {
         for (var col in row) {
@@ -93,6 +93,11 @@ class BoardController implements IBoardController {
               col.machine?.receiveAttack(attack);
             }
 
+            if (tile.machine?.dead ?? false) {
+              tile.unsetMachine();
+              _attackRange(tile);
+              _reachablePieces(tile);
+            }
             if (col.machine?.dead ?? false) {
               col.unsetMachine();
               _attackRange(tile);

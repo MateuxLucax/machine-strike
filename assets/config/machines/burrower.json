@@ -6,5 +6,6 @@
   "combatPower": 2,
   "health": 80,
   "movementRange": 1,
-  "attackRange": 1
+  "attackRange": 1,
+  "victoryPoints": 3
 }

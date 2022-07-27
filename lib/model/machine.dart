@@ -1,7 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'package:machinestrike/enum/direction.dart';
-import 'package:machinestrike/enum/player.dart';
-import 'package:machinestrike/model/tile_position.dart';
+
+import '../enum/direction.dart';
+import '../enum/player.dart';
+import 'tile_position.dart';
 
 class Machine {
   final TilePosition position;
@@ -11,6 +12,7 @@ class Machine {
   final int movementRange;
   final int attackRange;
   final Widget image;
+  final int victoryPoints;
   int health;
   Direction direction;
 
@@ -24,6 +26,7 @@ class Machine {
     required this.attackRange,
     required this.health,
     required this.image,
+    required this.victoryPoints,
   });
 
   Widget getAsset() {
@@ -45,11 +48,7 @@ class Machine {
   bool get dead => health <= 0;
 
   @override
-  operator ==(other) =>
-      other is Machine &&
-      other.name == name &&
-      other.position == position &&
-      other.player == player;
+  operator ==(other) => other is Machine && other.name == name && other.position == position && other.player == player;
 
   @override
   int get hashCode => hashValues(name, position, player);

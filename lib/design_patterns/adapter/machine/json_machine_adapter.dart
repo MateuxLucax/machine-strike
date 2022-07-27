@@ -23,6 +23,7 @@ class JsonMachineAdapter implements IMachineAdapter {
       movementRange: json['movementRange'] as int,
       attackRange: json['attackRange'] as int,
       player: Player.fromId(json['player'] as int),
+      victoryPoints: json['victoryPoints'] as int,
       position: TilePosition(
         json['row'] as int,
         json['col'] as int,

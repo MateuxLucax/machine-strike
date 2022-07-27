@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart';
-import 'package:machinestrike/enum/direction.dart';
-import 'package:machinestrike/enum/player.dart';
-import 'package:machinestrike/model/machine.dart';
-import 'package:machinestrike/model/tile_position.dart';
+
+import '../enum/direction.dart';
+import '../enum/player.dart';
+import '../model/machine.dart';
+import '../model/tile_position.dart';
 
 class MachineInfo {
   final TilePosition position;
@@ -11,6 +12,7 @@ class MachineInfo {
   final int movementRange;
   final int attackRange;
   final int health;
+  final int victoryPoints;
 
   MachineInfo({
     required this.position,
@@ -19,6 +21,7 @@ class MachineInfo {
     required this.movementRange,
     required this.attackRange,
     required this.health,
+    required this.victoryPoints,
   });
 }
 
@@ -40,6 +43,7 @@ class MachineFromConfig {
         movementRange: info.movementRange,
         attackRange: info.attackRange,
         health: info.health,
+        victoryPoints: info.victoryPoints,
         image: Image.asset(
           machineConfig.getAsset(),
           fit: BoxFit.fill,
