@@ -29,4 +29,6 @@ class TilePosition {
   String toString() {
     return '[$row][$col]';
   }
+
+  String get description => '[${row + 1}][${col + 1}]';
 }
