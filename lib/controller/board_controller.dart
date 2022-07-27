@@ -95,8 +95,7 @@ class BoardController implements IBoardController {
 
             if (tile.machine?.dead ?? false) {
               tile.unsetMachine();
-              _attackRange(tile);
-              _reachablePieces(tile);
+              _reset();
             }
             if (col.machine?.dead ?? false) {
               col.unsetMachine();
@@ -165,7 +164,7 @@ class BoardController implements IBoardController {
     final player = selectedTile.machine?.player ?? Player.one;
 
     if (direction == Direction.north) {
-      for (var row = 0; row <= (position.row - attackRange).abs(); row++) {
+      for (var row = 0; row < position.row; row++) {
         if ((position.row - row).abs() <= attackRange) {
           final tileMachine = tiles[row][position.col].machine;
 
@@ -175,7 +174,7 @@ class BoardController implements IBoardController {
         }
       }
     } else if (direction == Direction.south) {
-      for (var row = tiles.length; row >= (position.row - attackRange).abs(); row--) {
+      for (var row = (tiles.length - 1); row > position.row; row--) {
         if ((position.row - row).abs() <= attackRange) {
           final tileMachine = tiles[row][position.col].machine;
 
@@ -185,7 +184,7 @@ class BoardController implements IBoardController {
         }
       }
     } else if (direction == Direction.east) {
-      for (var col = tiles.length; col >= (position.row - attackRange).abs(); col--) {
+      for (var col = (tiles.length - 1); col > position.col; col--) {
         if ((position.col - col).abs() <= attackRange) {
           final tileMachine = tiles[position.row][col].machine;
 
@@ -195,7 +194,7 @@ class BoardController implements IBoardController {
         }
       }
     } else if (direction == Direction.west) {
-      for (var col = 0; col <= (position.col - attackRange).abs(); col++) {
+      for (var col = 0; col < position.col; col++) {
         if ((position.col - col).abs() <= attackRange) {
           final tileMachine = tiles[position.row][col].machine;
 

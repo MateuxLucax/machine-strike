@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import '../enum/direction.dart';
 import '../enum/player.dart';
@@ -48,7 +48,11 @@ class Machine {
   bool get dead => health <= 0;
 
   @override
-  operator ==(other) => other is Machine && other.name == name && other.position == position && other.player == player;
+  operator ==(other) =>
+      other is Machine &&
+      other.name == name &&
+      other.position == position &&
+      other.player == player;
 
   @override
   int get hashCode => hashValues(name, position, player);

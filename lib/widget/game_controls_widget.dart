@@ -15,7 +15,7 @@ class GameControlsWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
             InfoTextWidget(
-              description: 'WASD: ',
+              description: 'W/A/S/D: ',
               value: 'Cursor direction',
             ),
             InfoTextWidget(
@@ -27,7 +27,7 @@ class GameControlsWidget extends StatelessWidget {
               value: 'Unselect a machine',
             ),
             InfoTextWidget(
-              description: 'QE: ',
+              description: 'Q/E: ',
               value: 'Rotate machine',
             ),
             InfoTextWidget(
