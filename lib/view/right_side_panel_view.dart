@@ -57,7 +57,7 @@ class _RightSidePanelViewState extends State<RightSidePanelView> implements Curs
                 'Terrain info',
                 style: TextStyle(
                   color: theme.colorScheme.onSecondary,
-                  fontSize: theme.textTheme.headline6?.fontSize ?? 12.0,
+                  fontSize: theme.textTheme.headline6?.fontSize,
                 ),
               ),
               const SizedBox(height: 12),
@@ -77,7 +77,7 @@ class _RightSidePanelViewState extends State<RightSidePanelView> implements Curs
                 'Machine info',
                 style: TextStyle(
                   color: theme.colorScheme.onSecondary,
-                  fontSize: theme.textTheme.headline6?.fontSize ?? 12.0,
+                  fontSize: theme.textTheme.headline6?.fontSize,
                 ),
               ),
               const SizedBox(height: 12),

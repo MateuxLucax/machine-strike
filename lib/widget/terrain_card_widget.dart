@@ -1,24 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../model/terrain.dart';
+import 'info_text_widget.dart';
 
 class TerrainCardWidget extends StatelessWidget {
   final Terrain terrain;
   const TerrainCardWidget(this.terrain, {Key? key}) : super(key: key);
-
-  Widget _infoItem(String description, String value) {
-    return Wrap(
-      children: [
-        Text(
-          description,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(value),
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +35,10 @@ class TerrainCardWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            _infoItem('Combat power offset: ', terrain.combatPowerOffset.toString()),
+            InfoTextWidget(
+              description: 'Combat power offset: ',
+              value: terrain.combatPowerOffset.toString(),
+            ),
           ],
         ),
       ),

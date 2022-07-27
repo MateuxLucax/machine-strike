@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:machinestrike/design_patterns/singleton/boards.dart';
-import 'package:machinestrike/widget/board_select_widget.dart';
+
+import '../design_patterns/singleton/boards.dart';
+import '../widget/board_select_widget.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({
@@ -21,6 +22,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     double maxW = MediaQuery.of(context).size.width;
+    ThemeData theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -28,16 +30,20 @@ class _HomeViewState extends State<HomeView> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          const Text('Select which board you want to play in'),
-          const SizedBox(
-            width: 24,
-          ),
-          Row(
-            children: [
-              SingleChildScrollView(
-                child: Container(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Text(
+              'Select which board you want to play in',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: theme.colorScheme.onSecondary,
+                fontSize: theme.textTheme.headline6?.fontSize,
+              ),
+            ),
+            Row(
+              children: [
+                Container(
                   padding: const EdgeInsets.all(24),
                   width: maxW,
                   child: Wrap(
@@ -45,10 +51,10 @@ class _HomeViewState extends State<HomeView> {
                     children: Boards().all.map((board) => BoardSelectWidget(board)).toList(),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

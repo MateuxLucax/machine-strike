@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../widget/game_controls_widget.dart';
+import '../widget/game_score_card_widget.dart';
+
 class LeftSidePanelView extends StatefulWidget {
   const LeftSidePanelView({Key? key}) : super(key: key);
 
@@ -31,9 +34,19 @@ class _LeftSidePanelViewState extends State<LeftSidePanelView> {
                 'Game Score',
                 style: TextStyle(
                   color: theme.colorScheme.onSecondary,
-                  fontSize: theme.textTheme.headline6?.fontSize ?? 12.0,
+                  fontSize: theme.textTheme.headline6?.fontSize,
                 ),
               ),
+              const GameScoreWidget(),
+              const SizedBox(height: 12),
+              Text(
+                'Game Controls',
+                style: TextStyle(
+                  color: theme.colorScheme.onSecondary,
+                  fontSize: theme.textTheme.headline6?.fontSize,
+                ),
+              ),
+              const GameControlsWidget(),
             ],
           ),
         ),

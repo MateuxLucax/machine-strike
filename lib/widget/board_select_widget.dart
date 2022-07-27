@@ -52,9 +52,9 @@ class BoardSelectWidget extends StatelessWidget {
         },
         child: Card(
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(16),
             child: SizedBox(
-              width: 24 * 8,
+              width: 32 * 8,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.black,

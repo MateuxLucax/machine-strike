@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:machinestrike/design_patterns/decorator/tile/attack_tile_decorator.dart';
 
 import '../controller/board_controller.dart';
+import '../design_patterns/decorator/tile/attack_tile_decorator.dart';
 import '../design_patterns/decorator/tile/reachable_tile_decorator.dart';
 import '../design_patterns/decorator/tile/select_tile_stack_decorator.dart';
 import '../design_patterns/observer/cursor_observer.dart';
