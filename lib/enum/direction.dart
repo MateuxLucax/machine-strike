@@ -32,4 +32,9 @@ enum Direction {
         return north;
     }
   }
+
+  @override
+  String toString() {
+    return '${name.split('.').last[0].toUpperCase()}${name.split('.').last.substring(1).toLowerCase()}';
+  }
 }
