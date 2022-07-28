@@ -3,21 +3,8 @@ import 'package:flutter/material.dart';
 import '../design_patterns/singleton/boards.dart';
 import '../widget/board_select_widget.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
-  final buttonStyle = ButtonStyle(
-    backgroundColor: MaterialStateProperty.all(Colors.blueGrey),
-    padding: MaterialStateProperty.all(const EdgeInsets.all(24)),
-    textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 24)),
-  );
+class HomeView extends StatelessWidget {
+  const HomeView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
