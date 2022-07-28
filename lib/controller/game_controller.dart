@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 
+import '../config/game_const.dart';
 import '../design_patterns/observer/cursor_observer.dart';
 import '../design_patterns/observer/game_observer.dart';
 import '../design_patterns/observer/update_tiles_observer.dart';
@@ -9,6 +10,7 @@ import '../enum/direction.dart';
 import '../enum/player.dart';
 import '../enum/reachability.dart';
 import '../model/board.dart';
+import '../model/machine.dart';
 import '../model/tile.dart';
 
 abstract class IGameController {
@@ -71,10 +73,13 @@ class GameController implements IGameController {
   @override
   void handleKeyStroke(RawKeyEvent event) {
     if (event is! RawKeyDownEvent) return;
-    final initialPosition = Cursor().position.copyWith();
+    final initialPosition = Cursor().position.copy();
     final tile = selectedTile;
 
     final key = event.logicalKey;
+
+    // TODO: move cursor to command
+    // TODO: change machine position as command, to be reversible until attack!
     if (key == LogicalKeyboardKey.keyA) {
       Cursor().position.move(col: -1);
     } else if (key == LogicalKeyboardKey.keyD) {
@@ -123,10 +128,18 @@ class GameController implements IGameController {
               tile.unsetMachine();
               _reset();
             }
-            // TODO: if enemy has no more machines, ends game by settign vp to double.infinity
+
             if (col.machine?.dead ?? false) {
-              game.updateVictoryPoints(col.machine!.victoryPoints);
               col.unsetMachine();
+              if (enemyMachines.isEmpty) {
+                game.updateVictoryPoints(GameConst.victoryPointsWin + 1);
+                col.unsetMachine();
+                _attackRange(tile);
+                _reachablePieces(tile);
+                _callUpdateGame();
+              } else {
+                game.updateVictoryPoints(col.machine!.victoryPoints);
+              }
               _attackRange(tile);
               _reachablePieces(tile);
               _callUpdateGame();
@@ -181,20 +194,22 @@ class GameController implements IGameController {
   }
 
   void _reachablePieces(Tile selectedTile) {
-    final position = selectedTile.position;
-    final movementRange = selectedTile.machine?.movementRange ?? 0;
+    if (!(selectedTile.machine?.alreadyMoved ?? true)) {
+      final position = selectedTile.position;
+      final movementRange = selectedTile.machine?.movementRange ?? 0;
 
-    for (var row in tiles) {
-      for (var col in row) {
-        if (col.machine == selectedTile.machine) {
-          continue;
-        }
-        final colPos = col.position;
-        final dist = (position.row - colPos.row).abs() + (position.col - colPos.col).abs();
-        if (dist > movementRange || col.hasMachine) {
-          col.updateReachability(Reachability.unreachable);
-        } else {
-          col.updateReachability(Reachability.reachable);
+      for (var row in tiles) {
+        for (var col in row) {
+          if (col.machine == selectedTile.machine) {
+            continue;
+          }
+          final colPos = col.position;
+          final dist = (position.row - colPos.row).abs() + (position.col - colPos.col).abs();
+          if (dist > movementRange || col.hasMachine) {
+            col.updateReachability(Reachability.unreachable);
+          } else {
+            col.updateReachability(Reachability.reachable);
+          }
         }
       }
     }
@@ -202,48 +217,51 @@ class GameController implements IGameController {
 
   void _attackRange(Tile selectedTile) {
     _resetAttackRange();
-    final position = selectedTile.position;
-    final attackRange = selectedTile.machine?.attackRange ?? 0;
-    final direction = selectedTile.machine?.direction ?? Direction.north;
-    final player = selectedTile.machine?.player ?? Player.one;
 
-    if (direction == Direction.north) {
-      for (var row = 0; row < position.row; row++) {
-        if ((position.row - row).abs() <= attackRange) {
-          final tileMachine = tiles[row][position.col].machine;
+    if (!(selectedTile.machine?.alreadyAttacked ?? true)) {
+      final position = selectedTile.position;
+      final attackRange = selectedTile.machine?.attackRange ?? 0;
+      final direction = selectedTile.machine?.direction ?? Direction.north;
+      final player = selectedTile.machine?.player ?? Player.one;
 
-          if (tileMachine != null && tileMachine.player != player) {
-            tiles[row][position.col].updateInAttackRange(true);
+      if (direction == Direction.north) {
+        for (var row = 0; row < position.row; row++) {
+          if ((position.row - row).abs() <= attackRange) {
+            final tileMachine = tiles[row][position.col].machine;
+
+            if (tileMachine != null && tileMachine.player != player) {
+              tiles[row][position.col].updateInAttackRange(true);
+            }
           }
         }
-      }
-    } else if (direction == Direction.south) {
-      for (var row = (tiles.length - 1); row > position.row; row--) {
-        if ((position.row - row).abs() <= attackRange) {
-          final tileMachine = tiles[row][position.col].machine;
+      } else if (direction == Direction.south) {
+        for (var row = (tiles.length - 1); row > position.row; row--) {
+          if ((position.row - row).abs() <= attackRange) {
+            final tileMachine = tiles[row][position.col].machine;
 
-          if (tileMachine != null && tileMachine.player != player) {
-            tiles[row][position.col].updateInAttackRange(true);
+            if (tileMachine != null && tileMachine.player != player) {
+              tiles[row][position.col].updateInAttackRange(true);
+            }
           }
         }
-      }
-    } else if (direction == Direction.east) {
-      for (var col = (tiles.length - 1); col > position.col; col--) {
-        if ((position.col - col).abs() <= attackRange) {
-          final tileMachine = tiles[position.row][col].machine;
+      } else if (direction == Direction.east) {
+        for (var col = (tiles.length - 1); col > position.col; col--) {
+          if ((position.col - col).abs() <= attackRange) {
+            final tileMachine = tiles[position.row][col].machine;
 
-          if (tileMachine != null && tileMachine.player != player) {
-            tiles[position.row][col].updateInAttackRange(true);
+            if (tileMachine != null && tileMachine.player != player) {
+              tiles[position.row][col].updateInAttackRange(true);
+            }
           }
         }
-      }
-    } else if (direction == Direction.west) {
-      for (var col = 0; col < position.col; col++) {
-        if ((position.col - col).abs() <= attackRange) {
-          final tileMachine = tiles[position.row][col].machine;
+      } else if (direction == Direction.west) {
+        for (var col = 0; col < position.col; col++) {
+          if ((position.col - col).abs() <= attackRange) {
+            final tileMachine = tiles[position.row][col].machine;
 
-          if (tileMachine != null && tileMachine.player != player) {
-            tiles[position.row][col].updateInAttackRange(true);
+            if (tileMachine != null && tileMachine.player != player) {
+              tiles[position.row][col].updateInAttackRange(true);
+            }
           }
         }
       }
@@ -285,4 +303,22 @@ class GameController implements IGameController {
       observer.updateGame(game);
     }
   }
+
+  List<Machine> _getMachinesByPlayer(Player player) {
+    final List<Machine> machines = [];
+    for (var row in tiles) {
+      for (var col in row) {
+        final machine = col.machine;
+        if (machine != null) {
+          if (machine.player == player) {
+            machines.add(machine);
+          }
+        }
+      }
+    }
+
+    return machines;
+  }
+
+  List<Machine> get enemyMachines => _getMachinesByPlayer(game.enemy);
 }

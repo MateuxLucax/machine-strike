@@ -8,9 +8,7 @@ class TilePosition {
 
   TilePosition(this.row, this.col);
 
-  TilePosition copyWith({int? row, int? col}) {
-    return TilePosition(row ?? this.row, col ?? this.col);
-  }
+  TilePosition copy() => TilePosition(row, col);
 
   void move({int? row, int? col}) {
     this.row = row != null && _respectLimits((this.row + (row))) ? (this.row + (row)) : this.row;
@@ -23,7 +21,7 @@ class TilePosition {
   operator ==(other) => other is TilePosition && other.row == row && other.col == col;
 
   @override
-  int get hashCode => hashValues('$row-', col);
+  int get hashCode => hashValues('$row-$col', col, row);
 
   @override
   String toString() {

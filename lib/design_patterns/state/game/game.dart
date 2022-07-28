@@ -1,5 +1,6 @@
 import '../../../config/game_const.dart';
 import '../../../enum/player.dart';
+import 'game_finished_state.dart';
 import 'game_state.dart';
 import 'player_one_state.dart';
 
@@ -27,11 +28,14 @@ class Game {
     victoryPoints.forEach((player, playerScore) {
       if (playerScore >= GameConst.victoryPointsWin) {
         winner = player;
+        setState(GameFinishedState(this));
       }
     });
   }
 
   Player get player => _gameState.currentPlayer();
+
+  Player get enemy => _gameState.enemy();
 
   void nextPlayer() => _gameState.nextPlayer();
 }

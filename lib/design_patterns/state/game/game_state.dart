@@ -5,6 +5,10 @@ abstract class GameState {
     throw Exception('No player selected');
   }
 
+  Player enemy() {
+    throw Exception('No player selected');
+  }
+
   int currentPlayerScore() {
     throw Exception('No player score');
   }

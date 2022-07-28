@@ -9,10 +9,4 @@ class Board {
   Tile getByPosition(TilePosition position) {
     return tiles[position.row][position.col];
   }
-
-  Board copy() {
-    return Board([
-      ...tiles.map((row) => [...row]).toList()
-    ]);
-  }
 }

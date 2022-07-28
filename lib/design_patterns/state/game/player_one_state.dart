@@ -14,6 +14,11 @@ class PlayerOneState implements GameState {
   }
 
   @override
+  Player enemy() {
+    return Player.two;
+  }
+
+  @override
   int currentPlayerScore() {
     return game.victoryPoints[Player.one] ?? 0;
   }
