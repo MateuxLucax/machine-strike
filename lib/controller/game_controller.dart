@@ -1,6 +1,11 @@
 import 'package:flutter/services.dart';
 
 import '../config/game_const.dart';
+import '../design_patterns/command/command_invoker.dart';
+import '../design_patterns/command/cursor/cursor_down_command.dart';
+import '../design_patterns/command/cursor/cursor_left_command.dart';
+import '../design_patterns/command/cursor/cursor_right_command.dart';
+import '../design_patterns/command/cursor/cursor_up_command.dart';
 import '../design_patterns/observer/cursor_observer.dart';
 import '../design_patterns/observer/game_observer.dart';
 import '../design_patterns/observer/update_tiles_observer.dart';
@@ -36,6 +41,7 @@ class GameController implements IGameController {
   final List<CursorObserver> cursorObservers = [];
   final List<UpdateTilesObserver> tilesObserver = [];
   final List<GameObserver> gameObservers = [];
+  final invoker = CommandInvoker();
   Tile? selectedTile;
   late Game game;
 
@@ -73,21 +79,22 @@ class GameController implements IGameController {
   @override
   void handleKeyStroke(RawKeyEvent event) {
     if (event is! RawKeyDownEvent) return;
-    final initialPosition = Cursor().position.copy();
     final tile = selectedTile;
 
     final key = event.logicalKey;
 
-    // TODO: move cursor to command
-    // TODO: change machine position as command, to be reversible until attack!
     if (key == LogicalKeyboardKey.keyA) {
-      Cursor().position.move(col: -1);
+      invoker.execute(CursorLeftCommand());
+      _callUpdateCursor();
     } else if (key == LogicalKeyboardKey.keyD) {
-      Cursor().position.move(col: 1);
+      invoker.execute(CursorRightCommand());
+      _callUpdateCursor();
     } else if (key == LogicalKeyboardKey.keyS) {
-      Cursor().position.move(row: 1);
+      invoker.execute(CursorDownCommand());
+      _callUpdateCursor();
     } else if (key == LogicalKeyboardKey.keyW) {
-      Cursor().position.move(row: -1);
+      invoker.execute(CursorUpCommand());
+      _callUpdateCursor();
     } else if (key == LogicalKeyboardKey.escape) {
       _reset();
       _callUpdateTiles();
@@ -97,9 +104,7 @@ class GameController implements IGameController {
         selectedTile = currentTile;
         _reachablePieces(currentTile);
         _attackRange(selectedTile!);
-      } else if (tile != null &&
-          !currentTile.hasMachine &&
-          !(tile.machine?.alreadyMoved ?? false)) {
+      } else if (tile != null && !currentTile.hasMachine && !(tile.machine?.alreadyMoved ?? false)) {
         tile.machine?.updateAlreadyMoved(true);
         currentTile.addMachine(tile.machine!);
         board.tiles[tile.position.row][tile.position.col].unsetMachine();
@@ -107,9 +112,7 @@ class GameController implements IGameController {
       }
       _callUpdateTiles();
       _callUpdateCursor();
-    } else if (key == LogicalKeyboardKey.keyT &&
-        tile != null &&
-        !(tile.machine?.alreadyAttacked ?? false)) {
+    } else if (key == LogicalKeyboardKey.keyT && tile != null && !(tile.machine?.alreadyAttacked ?? false)) {
       tile.machine?.updateAlreadyAttacked(true);
       final attack = tile.machine?.combatPower ?? 0 + (tile.terrain.combatPowerOffset);
       for (var row in tiles) {
@@ -177,19 +180,16 @@ class GameController implements IGameController {
           col.updateInAttackRange(false);
         }
       }
+      invoker.clear();
       game.nextPlayer();
       _reset();
       _callUpdateGame();
-    }
-
-    final reachable = tiles[Cursor().row][Cursor().col].reachability;
-
-    if (reachable == null || reachable == Reachability.reachable) {
-      if (initialPosition != Cursor().position) {
-        _callUpdateCursor();
-      }
-    } else {
-      Cursor().position = initialPosition;
+    } else if (key == LogicalKeyboardKey.keyZ) {
+      invoker.undo();
+      _callUpdateCursor();
+    } else if (key == LogicalKeyboardKey.keyX) {
+      invoker.redo();
+      _callUpdateCursor();
     }
   }
 
