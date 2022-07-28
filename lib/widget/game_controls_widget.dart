@@ -38,6 +38,14 @@ class GameControlsWidget extends StatelessWidget {
               description: 'F: ',
               value: 'Finish turn',
             ),
+            InfoTextWidget(
+              description: 'Z: ',
+              value: 'Undo cursor',
+            ),
+            InfoTextWidget(
+              description: 'X: ',
+              value: 'Redo cursor',
+            ),
           ],
         ),
       ),
