@@ -123,6 +123,7 @@ class GameController implements IGameController {
               tile.unsetMachine();
               _reset();
             }
+            // TODO: if enemy has no more machines, ends game by settign vp to double.infinity
             if (col.machine?.dead ?? false) {
               game.updateVictoryPoints(col.machine!.victoryPoints);
               col.unsetMachine();

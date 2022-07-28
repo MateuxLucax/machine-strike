@@ -59,7 +59,7 @@ class _LeftSidePanelViewState extends State<LeftSidePanelView> implements GameOb
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Game Score',
+                'Game Info',
                 style: TextStyle(
                   color: theme.colorScheme.onSecondary,
                   fontSize: theme.textTheme.headline6?.fontSize,
