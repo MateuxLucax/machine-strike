@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
-import '../../../config/game_config.dart';
+import '../../../config/game_const.dart';
 import '../../../config/terrain_from_config.dart';
 import '../../../model/terrain.dart';
 import '../iterrain_adapter.dart';

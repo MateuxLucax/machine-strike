@@ -1,4 +1,4 @@
-import '../../../config/game_config.dart';
+import '../../../config/game_const.dart';
 import '../../../model/machine.dart';
 import '../../../model/tile.dart';
 import '../../../model/tile_position.dart';

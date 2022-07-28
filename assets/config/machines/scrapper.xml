@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <root>
   <name>scrapper</name>
-  <row>5</row>
-  <col>0</col>
+  <row>7</row>
+  <col>5</col>
   <player>2</player>
   <combatPower>1</combatPower>
   <health>30</health>

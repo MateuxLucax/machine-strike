@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
-import '../controller/board_controller.dart';
-import '../design_patterns/builder/game.dart';
+import '../controller/game_controller.dart';
+import '../model/board.dart';
 import 'board_view.dart';
 import 'left_side_panel_view.dart';
 import 'right_side_panel_view.dart';
 
 class GameView extends StatelessWidget {
-  final Game game;
+  final Board board;
   const GameView(
-    this.game, {
+    this.board, {
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final IBoardController boardController = BoardController(game.board);
+    final IGameController controller = GameController(board);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,8 +35,8 @@ class GameView extends StatelessWidget {
       body: Row(
         children: [
           Column(
-            children: const [
-              LeftSidePanelView(),
+            children: [
+              LeftSidePanelView(controller),
             ],
           ),
           const SizedBox(
@@ -48,7 +48,7 @@ class GameView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  BoardView(boardController),
+                  BoardView(controller),
                 ],
               ),
             ),
@@ -58,7 +58,7 @@ class GameView extends StatelessWidget {
           ),
           Column(
             children: [
-              RightSidePanelView(boardController),
+              RightSidePanelView(controller),
             ],
           ),
         ],

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../design_patterns/builder/builders/standard_game_builder.dart';
-import '../design_patterns/builder/game.dart';
 import '../design_patterns/singleton/machines.dart';
-import '../enum/player.dart';
 import '../model/board.dart';
 import '../model/tile.dart';
 import '../view/game_view.dart';
@@ -32,9 +30,7 @@ class BoardSelectWidget extends StatelessWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: () {
-          Game game = StandardGameBuilder()
-              .setBoard(board)
-              .setInitialPlayer(Player.one)
+          Board game = StandardGameBuilder(board)
               .addMachine(Machines().get(0))
               .addMachine(Machines().get(1))
               .addMachine(Machines().get(2))

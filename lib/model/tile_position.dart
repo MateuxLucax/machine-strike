@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import '../config/game_config.dart';
+import '../config/game_const.dart';
 
 class TilePosition {
   int row;

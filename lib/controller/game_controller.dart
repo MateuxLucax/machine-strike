@@ -1,40 +1,57 @@
 import 'package:flutter/services.dart';
 
 import '../design_patterns/observer/cursor_observer.dart';
+import '../design_patterns/observer/game_observer.dart';
 import '../design_patterns/observer/update_tiles_observer.dart';
+import '../design_patterns/singleton/cursor.dart';
+import '../design_patterns/state/game/game.dart';
 import '../enum/direction.dart';
 import '../enum/player.dart';
 import '../enum/reachability.dart';
 import '../model/board.dart';
 import '../model/tile.dart';
-import '../model/tile_position.dart';
 
-abstract class IBoardController {
+abstract class IGameController {
   Tile get currentTile;
 
   List<List<Tile>> get tiles;
+
+  Game get currentGame;
 
   void attachCursorObserver(CursorObserver observer);
 
   void attachTilesObserver(UpdateTilesObserver observer);
 
+  void attachGameObserver(GameObserver observer);
+
   void handleKeyStroke(RawKeyEvent event);
+
+  Player get currentPlayer;
 }
 
-class BoardController implements IBoardController {
-  final Board board;
+class GameController implements IGameController {
+  Board board;
   final List<CursorObserver> cursorObservers = [];
   final List<UpdateTilesObserver> tilesObserver = [];
-  TilePosition cursor = TilePosition(0, 0);
+  final List<GameObserver> gameObservers = [];
   Tile? selectedTile;
+  late Game game;
 
-  BoardController(this.board);
+  GameController(this.board) {
+    game = Game();
+  }
 
   @override
-  Tile get currentTile => board.tiles[cursor.row][cursor.col];
+  Tile get currentTile => board.tiles[Cursor().row][Cursor().col];
 
   @override
   List<List<Tile>> get tiles => board.tiles;
+
+  @override
+  Player get currentPlayer => game.player;
+
+  @override
+  Game get currentGame => game;
 
   @override
   void attachCursorObserver(CursorObserver observer) {
@@ -47,26 +64,31 @@ class BoardController implements IBoardController {
   }
 
   @override
+  void attachGameObserver(GameObserver observer) {
+    gameObservers.add(observer);
+  }
+
+  @override
   void handleKeyStroke(RawKeyEvent event) {
     if (event is! RawKeyDownEvent) return;
-    final initialPosition = cursor.copyWith();
+    final initialPosition = Cursor().position.copyWith();
     final tile = selectedTile;
 
     final key = event.logicalKey;
     if (key == LogicalKeyboardKey.keyA) {
-      cursor.move(col: -1);
+      Cursor().position.move(col: -1);
     } else if (key == LogicalKeyboardKey.keyD) {
-      cursor.move(col: 1);
+      Cursor().position.move(col: 1);
     } else if (key == LogicalKeyboardKey.keyS) {
-      cursor.move(row: 1);
+      Cursor().position.move(row: 1);
     } else if (key == LogicalKeyboardKey.keyW) {
-      cursor.move(row: -1);
+      Cursor().position.move(row: -1);
     } else if (key == LogicalKeyboardKey.escape) {
       _reset();
       _callUpdateTiles();
       _callUpdateCursor();
     } else if (key == LogicalKeyboardKey.enter) {
-      if (tile == null && currentTile.hasMachine) {
+      if (tile == null && currentTile.hasMachine && currentTile.machine!.player == game.player) {
         selectedTile = currentTile;
         _reachablePieces(currentTile);
         _attackRange(selectedTile!);
@@ -75,7 +97,7 @@ class BoardController implements IBoardController {
       }
       _callUpdateTiles();
       _callUpdateCursor();
-    } else if (key == LogicalKeyboardKey.keyK && tile != null) {
+    } else if (key == LogicalKeyboardKey.keyT && tile != null) {
       final attack = tile.machine?.combatPower ?? 0 + (tile.terrain.combatPowerOffset);
       for (var row in tiles) {
         for (var col in row) {
@@ -94,9 +116,11 @@ class BoardController implements IBoardController {
               _reset();
             }
             if (col.machine?.dead ?? false) {
+              game.updateVictoryPoints(col.machine!.victoryPoints);
               col.unsetMachine();
               _attackRange(tile);
               _reachablePieces(tile);
+              _callUpdateGame();
             }
           }
         }
@@ -119,16 +143,20 @@ class BoardController implements IBoardController {
       _attackRange(tile);
       _callUpdateCursor();
       _callUpdateTiles();
+    } else if (key == LogicalKeyboardKey.keyF) {
+      game.nextPlayer();
+      _reset();
+      _callUpdateGame();
     }
 
-    final reachable = tiles[cursor.row][cursor.col].reachability;
+    final reachable = tiles[Cursor().row][Cursor().col].reachability;
 
     if (reachable == null || reachable == Reachability.reachable) {
-      if (initialPosition != cursor) {
+      if (initialPosition != Cursor().position) {
         _callUpdateCursor();
       }
     } else {
-      cursor = initialPosition;
+      Cursor().position = initialPosition;
     }
   }
 
@@ -202,18 +230,6 @@ class BoardController implements IBoardController {
     }
   }
 
-  void _callUpdateCursor() {
-    for (var observer in cursorObservers) {
-      observer.updateCursor(cursor, currentTile);
-    }
-  }
-
-  void _callUpdateTiles() {
-    for (var observer in tilesObserver) {
-      observer.update(tiles);
-    }
-  }
-
   void _reset({Tile? tile}) {
     if (tile != null) {
       currentTile.addMachine(tile.machine!);
@@ -234,6 +250,24 @@ class BoardController implements IBoardController {
       for (var col in row) {
         col.updateInAttackRange(false);
       }
+    }
+  }
+
+  void _callUpdateCursor() {
+    for (var observer in cursorObservers) {
+      observer.updateCursor(currentTile);
+    }
+  }
+
+  void _callUpdateTiles() {
+    for (var observer in tilesObserver) {
+      observer.updateTiles(tiles);
+    }
+  }
+
+  void _callUpdateGame() {
+    for (var observer in gameObservers) {
+      observer.updateGame(game);
     }
   }
 }

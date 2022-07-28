@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../controller/board_controller.dart';
+import '../controller/game_controller.dart';
 import '../design_patterns/decorator/tile/attack_tile_decorator.dart';
 import '../design_patterns/decorator/tile/reachable_tile_decorator.dart';
 import '../design_patterns/decorator/tile/select_tile_stack_decorator.dart';
 import '../design_patterns/observer/cursor_observer.dart';
 import '../design_patterns/observer/update_tiles_observer.dart';
+import '../design_patterns/singleton/cursor.dart';
 import '../enum/reachability.dart';
 import '../model/tile.dart';
-import '../model/tile_position.dart';
 import '../widget/tile_widget.dart';
 
 class BoardView extends StatefulWidget {
-  final IBoardController controller;
+  final IGameController controller;
   const BoardView(
     this.controller, {
     super.key,
@@ -89,14 +89,14 @@ class _BoardViewState extends State<BoardView> implements CursorObserver, Update
   }
 
   @override
-  void updateCursor(TilePosition cursor, Tile? terrain) {
+  void updateCursor(Tile? terrain) {
     setState(() {
-      cursorPosition = tiles.indexWhere((tile) => tile.position == cursor);
+      cursorPosition = tiles.indexWhere((tile) => tile.position == Cursor().position);
     });
   }
 
   @override
-  void update(List<List<Tile>> tiles) {
+  void updateTiles(List<List<Tile>> tiles) {
     setState(() {
       this.tiles = _matrixToList(tiles);
     });

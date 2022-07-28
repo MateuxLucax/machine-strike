@@ -1,19 +1,47 @@
 import 'package:flutter/material.dart';
 
+import '../controller/game_controller.dart';
+import '../design_patterns/observer/game_observer.dart';
+import '../design_patterns/state/game/game.dart';
+import '../widget/dialog_util.dart';
 import '../widget/game_controls_widget.dart';
 import '../widget/game_score_card_widget.dart';
 
 class LeftSidePanelView extends StatefulWidget {
-  const LeftSidePanelView({Key? key}) : super(key: key);
+  final IGameController controller;
+  const LeftSidePanelView(this.controller, {Key? key}) : super(key: key);
 
   @override
   State<LeftSidePanelView> createState() => _LeftSidePanelViewState();
 }
 
-class _LeftSidePanelViewState extends State<LeftSidePanelView> {
+class _LeftSidePanelViewState extends State<LeftSidePanelView> implements GameObserver {
+  Game? observedGame;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.attachGameObserver(this);
+    observedGame = widget.controller.currentGame;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final game = observedGame;
+
+    if (game != null) {
+      final winner = game.winner;
+
+      if (winner != null) {
+        Future.delayed(Duration.zero, () {
+          DialogUtil.showWinnerDialog(
+            context,
+            winner.toString(),
+          );
+        });
+      }
+    }
 
     return Expanded(
       child: Container(
@@ -37,7 +65,7 @@ class _LeftSidePanelViewState extends State<LeftSidePanelView> {
                   fontSize: theme.textTheme.headline6?.fontSize,
                 ),
               ),
-              const GameScoreWidget(),
+              if (game != null) GameScoreWidget(game),
               const SizedBox(height: 12),
               Text(
                 'Game Controls',
@@ -52,5 +80,12 @@ class _LeftSidePanelViewState extends State<LeftSidePanelView> {
         ),
       ),
     );
+  }
+
+  @override
+  void updateGame(Game game) {
+    setState(() {
+      observedGame = game;
+    });
   }
 }

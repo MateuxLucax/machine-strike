@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../controller/board_controller.dart';
+import '../controller/game_controller.dart';
 import '../design_patterns/observer/cursor_observer.dart';
 import '../model/machine.dart';
 import '../model/terrain.dart';
 import '../model/tile.dart';
-import '../model/tile_position.dart';
 import '../widget/machine_card_widget.dart';
 import '../widget/terrain_card_widget.dart';
 
 class RightSidePanelView extends StatefulWidget {
-  final IBoardController controller;
+  final IGameController controller;
   const RightSidePanelView(
     this.controller, {
     Key? key,
@@ -100,7 +99,7 @@ class _RightSidePanelViewState extends State<RightSidePanelView> implements Curs
   }
 
   @override
-  void updateCursor(TilePosition cursor, Tile tile) {
+  void updateCursor(Tile tile) {
     setState(() {
       currentTerrain = tile.terrain;
       currentMachine = tile.machine;

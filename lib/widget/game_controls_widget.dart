@@ -31,8 +31,12 @@ class GameControlsWidget extends StatelessWidget {
               value: 'Rotate machine',
             ),
             InfoTextWidget(
-              description: 'K: ',
+              description: 'T: ',
               value: 'Attack other machine',
+            ),
+            InfoTextWidget(
+              description: 'F: ',
+              value: 'Finish turn',
             ),
           ],
         ),
