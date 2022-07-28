@@ -6,9 +6,11 @@ import '../design_patterns/command/cursor/cursor_down_command.dart';
 import '../design_patterns/command/cursor/cursor_left_command.dart';
 import '../design_patterns/command/cursor/cursor_right_command.dart';
 import '../design_patterns/command/cursor/cursor_up_command.dart';
-import '../design_patterns/observer/cursor_observer.dart';
-import '../design_patterns/observer/game_observer.dart';
-import '../design_patterns/observer/update_tiles_observer.dart';
+import '../design_patterns/observer/events/cursor_event.dart';
+import '../design_patterns/observer/events/game_event.dart';
+import '../design_patterns/observer/events/tiles_event.dart';
+import '../design_patterns/observer/observer.dart';
+import '../design_patterns/observer/observer_event.dart';
 import '../design_patterns/singleton/cursor.dart';
 import '../design_patterns/state/game/game.dart';
 import '../enum/direction.dart';
@@ -25,11 +27,7 @@ abstract class IGameController {
 
   Game get currentGame;
 
-  void attachCursorObserver(CursorObserver observer);
-
-  void attachTilesObserver(UpdateTilesObserver observer);
-
-  void attachGameObserver(GameObserver observer);
+  void attach(Observer observer);
 
   void handleKeyStroke(RawKeyEvent event);
 
@@ -38,9 +36,7 @@ abstract class IGameController {
 
 class GameController implements IGameController {
   Board board;
-  final List<CursorObserver> cursorObservers = [];
-  final List<UpdateTilesObserver> tilesObserver = [];
-  final List<GameObserver> gameObservers = [];
+  final List<Observer> observers = [];
   final invoker = CommandInvoker();
   Tile? selectedTile;
   late Game game;
@@ -62,18 +58,8 @@ class GameController implements IGameController {
   Game get currentGame => game;
 
   @override
-  void attachCursorObserver(CursorObserver observer) {
-    cursorObservers.add(observer);
-  }
-
-  @override
-  void attachTilesObserver(UpdateTilesObserver observer) {
-    tilesObserver.add(observer);
-  }
-
-  @override
-  void attachGameObserver(GameObserver observer) {
-    gameObservers.add(observer);
+  void attach(Observer observer) {
+    observers.add(observer);
   }
 
   @override
@@ -85,34 +71,37 @@ class GameController implements IGameController {
 
     if (key == LogicalKeyboardKey.keyA) {
       invoker.execute(CursorLeftCommand());
-      _callUpdateCursor();
+      _callObservers([CursorEvent(currentTile)]);
     } else if (key == LogicalKeyboardKey.keyD) {
       invoker.execute(CursorRightCommand());
-      _callUpdateCursor();
+      _callObservers([CursorEvent(currentTile)]);
     } else if (key == LogicalKeyboardKey.keyS) {
       invoker.execute(CursorDownCommand());
-      _callUpdateCursor();
+      _callObservers([CursorEvent(currentTile)]);
     } else if (key == LogicalKeyboardKey.keyW) {
       invoker.execute(CursorUpCommand());
-      _callUpdateCursor();
+      _callObservers([CursorEvent(currentTile)]);
     } else if (key == LogicalKeyboardKey.escape) {
       _reset();
-      _callUpdateTiles();
-      _callUpdateCursor();
+      _callObservers([CursorEvent(currentTile)]);
     } else if (key == LogicalKeyboardKey.enter) {
       if (tile == null && currentTile.hasMachine && currentTile.machine!.player == game.player) {
         selectedTile = currentTile;
         _reachablePieces(currentTile);
         _attackRange(selectedTile!);
-      } else if (tile != null && !currentTile.hasMachine && !(tile.machine?.alreadyMoved ?? false)) {
+      } else if (tile != null &&
+          !currentTile.hasMachine &&
+          !(tile.machine?.alreadyMoved ?? false) &&
+          (currentTile.reachability == Reachability.reachable)) {
         tile.machine?.updateAlreadyMoved(true);
         currentTile.addMachine(tile.machine!);
         board.tiles[tile.position.row][tile.position.col].unsetMachine();
         _reset();
       }
-      _callUpdateTiles();
-      _callUpdateCursor();
-    } else if (key == LogicalKeyboardKey.keyT && tile != null && !(tile.machine?.alreadyAttacked ?? false)) {
+      _callObservers([TilesEvent(tiles), CursorEvent(currentTile)]);
+    } else if (key == LogicalKeyboardKey.keyT &&
+        tile != null &&
+        !(tile.machine?.alreadyAttacked ?? false)) {
       tile.machine?.updateAlreadyAttacked(true);
       final attack = tile.machine?.combatPower ?? 0 + (tile.terrain.combatPowerOffset);
       for (var row in tiles) {
@@ -139,35 +128,32 @@ class GameController implements IGameController {
                 col.unsetMachine();
                 _attackRange(tile);
                 _reachablePieces(tile);
-                _callUpdateGame();
+                _callObservers([GameEvent(game)]);
               } else {
                 game.updateVictoryPoints(col.machine!.victoryPoints);
               }
               _attackRange(tile);
               _reachablePieces(tile);
-              _callUpdateGame();
+              _callObservers([GameEvent(game)]);
             }
           }
         }
       }
-      _callUpdateCursor();
-      _callUpdateTiles();
+      _callObservers([TilesEvent(tiles), CursorEvent(currentTile)]);
     } else if (key == LogicalKeyboardKey.keyQ && tile != null) {
       if (tile.hasMachine) {
         tile.machine!.updateDirection(tile.machine!.direction.previous());
         tile.rotateMachine();
       }
       _attackRange(tile);
-      _callUpdateCursor();
-      _callUpdateTiles();
+      _callObservers([TilesEvent(tiles), CursorEvent(currentTile)]);
     } else if (key == LogicalKeyboardKey.keyE && tile != null) {
       if (tile.hasMachine) {
         tile.machine!.updateDirection(tile.machine!.direction.next());
         tile.rotateMachine();
       }
       _attackRange(tile);
-      _callUpdateCursor();
-      _callUpdateTiles();
+      _callObservers([TilesEvent(tiles), CursorEvent(currentTile)]);
     } else if (key == LogicalKeyboardKey.keyF) {
       for (var row in tiles) {
         for (var col in row) {
@@ -183,13 +169,13 @@ class GameController implements IGameController {
       invoker.clear();
       game.nextPlayer();
       _reset();
-      _callUpdateGame();
+      _callObservers([GameEvent(game)]);
     } else if (key == LogicalKeyboardKey.keyZ) {
       invoker.undo();
-      _callUpdateCursor();
+      _callObservers([CursorEvent(currentTile)]);
     } else if (key == LogicalKeyboardKey.keyX) {
       invoker.redo();
-      _callUpdateCursor();
+      _callObservers([CursorEvent(currentTile)]);
     }
   }
 
@@ -286,21 +272,9 @@ class GameController implements IGameController {
     }
   }
 
-  void _callUpdateCursor() {
-    for (var observer in cursorObservers) {
-      observer.updateCursor(currentTile);
-    }
-  }
-
-  void _callUpdateTiles() {
-    for (var observer in tilesObserver) {
-      observer.updateTiles(tiles);
-    }
-  }
-
-  void _callUpdateGame() {
-    for (var observer in gameObservers) {
-      observer.updateGame(game);
+  void _callObservers(List<ObserverEvent> events) {
+    for (var observer in observers) {
+      events.forEach(observer.update);
     }
   }
 

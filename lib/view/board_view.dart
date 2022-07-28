@@ -4,8 +4,10 @@ import '../controller/game_controller.dart';
 import '../design_patterns/decorator/tile/attack_tile_decorator.dart';
 import '../design_patterns/decorator/tile/reachable_tile_decorator.dart';
 import '../design_patterns/decorator/tile/select_tile_stack_decorator.dart';
-import '../design_patterns/observer/cursor_observer.dart';
-import '../design_patterns/observer/update_tiles_observer.dart';
+import '../design_patterns/observer/events/cursor_event.dart';
+import '../design_patterns/observer/events/tiles_event.dart';
+import '../design_patterns/observer/observer.dart';
+import '../design_patterns/observer/observer_event.dart';
 import '../design_patterns/singleton/cursor.dart';
 import '../enum/reachability.dart';
 import '../model/tile.dart';
@@ -22,7 +24,7 @@ class BoardView extends StatefulWidget {
   State<BoardView> createState() => _BoardViewState();
 }
 
-class _BoardViewState extends State<BoardView> implements CursorObserver, UpdateTilesObserver {
+class _BoardViewState extends State<BoardView> implements Observer {
   List<Tile> tiles = [];
   int cursorPosition = 0;
 
@@ -41,8 +43,7 @@ class _BoardViewState extends State<BoardView> implements CursorObserver, Update
   void initState() {
     super.initState();
     tiles = _matrixToList(widget.controller.tiles);
-    widget.controller.attachCursorObserver(this);
-    widget.controller.attachTilesObserver(this);
+    widget.controller.attach(this);
   }
 
   @override
@@ -89,16 +90,15 @@ class _BoardViewState extends State<BoardView> implements CursorObserver, Update
   }
 
   @override
-  void updateCursor(Tile? terrain) {
-    setState(() {
-      cursorPosition = tiles.indexWhere((tile) => tile.position == Cursor().position);
-    });
-  }
-
-  @override
-  void updateTiles(List<List<Tile>> tiles) {
-    setState(() {
-      this.tiles = _matrixToList(tiles);
-    });
+  void update(ObserverEvent event) {
+    if (event is CursorEvent) {
+      setState(() {
+        cursorPosition = tiles.indexWhere((tile) => tile.position == Cursor().position);
+      });
+    } else if (event is TilesEvent) {
+      setState(() {
+        tiles = _matrixToList(event.tiles);
+      });
+    }
   }
 }

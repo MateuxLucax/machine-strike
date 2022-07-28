@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:machinestrike/design_patterns/observer/events/cursor_event.dart';
+import 'package:machinestrike/design_patterns/observer/observer.dart';
+import 'package:machinestrike/design_patterns/observer/observer_event.dart';
 
 import '../controller/game_controller.dart';
-import '../design_patterns/observer/cursor_observer.dart';
 import '../model/machine.dart';
 import '../model/terrain.dart';
 import '../model/tile.dart';
@@ -19,7 +21,7 @@ class RightSidePanelView extends StatefulWidget {
   State<RightSidePanelView> createState() => _RightSidePanelViewState();
 }
 
-class _RightSidePanelViewState extends State<RightSidePanelView> implements CursorObserver {
+class _RightSidePanelViewState extends State<RightSidePanelView> implements Observer {
   Machine? currentMachine;
   Terrain? currentTerrain;
 
@@ -28,7 +30,7 @@ class _RightSidePanelViewState extends State<RightSidePanelView> implements Curs
     super.initState();
     currentMachine = widget.controller.currentTile.machine;
     currentTerrain = widget.controller.currentTile.terrain;
-    widget.controller.attachCursorObserver(this);
+    widget.controller.attach(this);
   }
 
   @override
@@ -99,10 +101,12 @@ class _RightSidePanelViewState extends State<RightSidePanelView> implements Curs
   }
 
   @override
-  void updateCursor(Tile tile) {
-    setState(() {
-      currentTerrain = tile.terrain;
-      currentMachine = tile.machine;
-    });
+  void update(ObserverEvent event) {
+    if (event is CursorEvent) {
+      setState(() {
+        currentTerrain = event.tile.terrain;
+        currentMachine = event.tile.machine;
+      });
+    }
   }
 }

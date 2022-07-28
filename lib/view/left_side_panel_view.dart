@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../controller/game_controller.dart';
-import '../design_patterns/observer/game_observer.dart';
+import '../design_patterns/observer/events/game_event.dart';
+import '../design_patterns/observer/observer.dart';
+import '../design_patterns/observer/observer_event.dart';
 import '../design_patterns/state/game/game.dart';
 import '../widget/dialog_util.dart';
 import '../widget/game_controls_widget.dart';
@@ -15,13 +17,13 @@ class LeftSidePanelView extends StatefulWidget {
   State<LeftSidePanelView> createState() => _LeftSidePanelViewState();
 }
 
-class _LeftSidePanelViewState extends State<LeftSidePanelView> implements GameObserver {
+class _LeftSidePanelViewState extends State<LeftSidePanelView> implements Observer {
   Game? observedGame;
 
   @override
   void initState() {
     super.initState();
-    widget.controller.attachGameObserver(this);
+    widget.controller.attach(this);
     observedGame = widget.controller.currentGame;
   }
 
@@ -83,9 +85,11 @@ class _LeftSidePanelViewState extends State<LeftSidePanelView> implements GameOb
   }
 
   @override
-  void updateGame(Game game) {
-    setState(() {
-      observedGame = game;
-    });
+  void update(ObserverEvent event) {
+    if (event is GameEvent) {
+      setState(() {
+        observedGame = event.game;
+      });
+    }
   }
 }
