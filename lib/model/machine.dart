@@ -15,6 +15,8 @@ class Machine {
   final int victoryPoints;
   int health;
   Direction direction;
+  bool alreadyAttacked = false;
+  bool alreadyMoved = false;
 
   Machine({
     required this.position,
@@ -42,6 +44,14 @@ class Machine {
     this.direction = direction;
   }
 
+  void updateAlreadyAttacked(bool alreadyAttacked) {
+    this.alreadyAttacked = alreadyAttacked;
+  }
+
+  void updateAlreadyMoved(bool alreadyMoved) {
+    this.alreadyMoved = alreadyMoved;
+  }
+
   void receiveAttack(int attack) {
     health -= attack;
   }
@@ -49,7 +59,11 @@ class Machine {
   bool get dead => health <= 0;
 
   @override
-  operator ==(other) => other is Machine && other.name == name && other.position == position && other.player == player;
+  operator ==(other) =>
+      other is Machine &&
+      other.name == name &&
+      other.position == position &&
+      other.player == player;
 
   @override
   int get hashCode => hashValues(name, position, player);

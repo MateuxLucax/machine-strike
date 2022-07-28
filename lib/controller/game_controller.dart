@@ -92,12 +92,20 @@ class GameController implements IGameController {
         selectedTile = currentTile;
         _reachablePieces(currentTile);
         _attackRange(selectedTile!);
-      } else if (tile != null && !currentTile.hasMachine) {
-        _reset(tile: tile);
+      } else if (tile != null &&
+          !currentTile.hasMachine &&
+          !(tile.machine?.alreadyMoved ?? false)) {
+        tile.machine?.updateAlreadyMoved(true);
+        currentTile.addMachine(tile.machine!);
+        board.tiles[tile.position.row][tile.position.col].unsetMachine();
+        _reset();
       }
       _callUpdateTiles();
       _callUpdateCursor();
-    } else if (key == LogicalKeyboardKey.keyT && tile != null) {
+    } else if (key == LogicalKeyboardKey.keyT &&
+        tile != null &&
+        !(tile.machine?.alreadyAttacked ?? false)) {
+      tile.machine?.updateAlreadyAttacked(true);
       final attack = tile.machine?.combatPower ?? 0 + (tile.terrain.combatPowerOffset);
       for (var row in tiles) {
         for (var col in row) {
@@ -144,6 +152,17 @@ class GameController implements IGameController {
       _callUpdateCursor();
       _callUpdateTiles();
     } else if (key == LogicalKeyboardKey.keyF) {
+      for (var row in tiles) {
+        for (var col in row) {
+          final machine = col.machine;
+          if (machine != null) {
+            machine.updateAlreadyAttacked(false);
+            machine.updateAlreadyMoved(false);
+          }
+          col.updateReachability(null);
+          col.updateInAttackRange(false);
+        }
+      }
       game.nextPlayer();
       _reset();
       _callUpdateGame();
@@ -230,12 +249,7 @@ class GameController implements IGameController {
     }
   }
 
-  void _reset({Tile? tile}) {
-    if (tile != null) {
-      currentTile.addMachine(tile.machine!);
-      board.tiles[tile.position.row][tile.position.col].unsetMachine();
-    }
-
+  void _reset() {
     selectedTile = null;
     for (var row in tiles) {
       for (var col in row) {
