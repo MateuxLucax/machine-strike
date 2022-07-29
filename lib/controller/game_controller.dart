@@ -80,6 +80,7 @@ class GameController implements IGameController {
           if (machine != null) {
             invoker.execute(RotateMachineCommand(machine, tile, false));
             invoker.execute(AttackRangeCommand(game));
+            invoker.execute(ReachablePiecesCommand(game));
           }
         }
       } else if (key == LogicalKeyboardKey.keyE) {
@@ -88,6 +89,7 @@ class GameController implements IGameController {
           if (machine != null) {
             invoker.execute(RotateMachineCommand(machine, tile, true));
             invoker.execute(AttackRangeCommand(game));
+            invoker.execute(ReachablePiecesCommand(game));
           }
         }
       } else if (key == LogicalKeyboardKey.keyF) {
