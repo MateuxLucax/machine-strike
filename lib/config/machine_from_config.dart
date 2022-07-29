@@ -36,7 +36,7 @@ class MachineFromConfig {
 
       return Machine(
         position: info.position,
-        direction: Direction.north,
+        direction: info.player == Player.one ? Direction.south : Direction.north,
         player: info.player,
         name: machineConfig.getName(),
         combatPower: info.combatPower,
