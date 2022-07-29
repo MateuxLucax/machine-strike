@@ -9,10 +9,10 @@ import '../abstract_factory/factories/json_game_factory.dart';
 import '../abstract_factory/igame_factory.dart';
 
 class Machines {
-  static final Machines _singleton = Machines._internal();
+  static final Machines _instance = Machines._internal();
 
   factory Machines() {
-    return _singleton;
+    return _instance;
   }
 
   Machines._internal();
@@ -25,8 +25,7 @@ class Machines {
   };
 
   Future<void> loadMachines() async {
-    final Map<String, dynamic> assets =
-        jsonDecode(await rootBundle.loadString('AssetManifest.json'));
+    final Map<String, dynamic> assets = jsonDecode(await rootBundle.loadString('AssetManifest.json'));
 
     for (var asset in assets.entries) {
       if (asset.key.contains('assets/config/machines/')) {

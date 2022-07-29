@@ -13,3 +13,8 @@ If you don't have Flutter install on your computer, head on to:
 Now you are ready to run the code!
 
 ## Running the code
+
+First, ensure that you have Flutter ready by running:
+```bash
+flutter doctor --verbose
+```
