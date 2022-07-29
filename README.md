@@ -18,3 +18,13 @@ First, ensure that you have Flutter ready by running:
 ```bash
 flutter doctor --verbose
 ```
+
+After that, you first need to install the project dependencies
+```bash
+flutter pub get
+```
+
+Then, simply run:
+```bash
+flutter run -d chrome
+```
