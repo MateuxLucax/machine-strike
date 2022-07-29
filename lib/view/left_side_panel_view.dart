@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../controller/game_controller.dart';
+import '../controller/igame_controller.dart';
 import '../design_patterns/observer/events/game_event.dart';
 import '../design_patterns/observer/observer.dart';
 import '../design_patterns/observer/observer_event.dart';

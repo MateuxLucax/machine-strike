@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:machinestrike/design_patterns/observer/events/cursor_event.dart';
-import 'package:machinestrike/design_patterns/observer/observer.dart';
-import 'package:machinestrike/design_patterns/observer/observer_event.dart';
 
-import '../controller/game_controller.dart';
+import '../controller/igame_controller.dart';
+import '../design_patterns/observer/events/cursor_event.dart';
+import '../design_patterns/observer/observer.dart';
+import '../design_patterns/observer/observer_event.dart';
 import '../model/machine.dart';
 import '../model/terrain.dart';
-import '../model/tile.dart';
 import '../widget/machine_card_widget.dart';
 import '../widget/terrain_card_widget.dart';
 
@@ -28,8 +27,8 @@ class _RightSidePanelViewState extends State<RightSidePanelView> implements Obse
   @override
   void initState() {
     super.initState();
-    currentMachine = widget.controller.currentTile.machine;
-    currentTerrain = widget.controller.currentTile.terrain;
+    currentMachine = widget.controller.cursorTile.machine;
+    currentTerrain = widget.controller.cursorTile.terrain;
     widget.controller.attach(this);
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../controller/game_controller.dart';
+import '../controller/igame_controller.dart';
 import '../model/board.dart';
 import 'board_view.dart';
 import 'left_side_panel_view.dart';
