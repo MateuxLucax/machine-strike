@@ -26,13 +26,17 @@ class Game {
 
   int getVictoryPoints() => _gameState.currentPlayerScore();
 
-  void updateVictoryPoints(int score) {
-    _gameState.updatePlayerScore(score);
-    victoryPoints.forEach((player, playerScore) {
-      if (playerScore >= GameConst.victoryPointsWin) {
-        setState(GameFinishedState(this, player));
-      }
-    });
+  void updateScore(Player to, int score) {
+    final points = victoryPoints[to];
+    if (points != null) {
+      victoryPoints[to] = points + score;
+
+      victoryPoints.forEach((player, playerScore) {
+        if (playerScore >= GameConst.victoryPointsWin) {
+          setState(GameFinishedState(this, player));
+        }
+      });
+    }
   }
 
   Player get player => _gameState.currentPlayer();

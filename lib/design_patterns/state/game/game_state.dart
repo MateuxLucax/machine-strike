@@ -13,10 +13,6 @@ abstract class GameState {
     throw Exception('No player score');
   }
 
-  void updatePlayerScore(int score) {
-    throw Exception('No player score');
-  }
-
   void nextPlayer() {
     throw Exception('Next player not implemented');
   }

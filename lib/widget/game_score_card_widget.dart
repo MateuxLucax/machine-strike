@@ -21,17 +21,17 @@ class GameScoreWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               InfoTextWidget(
-                description: 'Turn: ',
-                value: game.turn.toString(),
+                'Turn: ',
+                game.turn.toString(),
               ),
               const SizedBox(height: 12),
               InfoTextWidget(
-                description: 'Current player: ',
-                value: game.player.toString(),
+                'Current player: ',
+                game.player.toString(),
               ),
               InfoTextWidget(
-                description: 'Player score: ',
-                value: game.getVictoryPoints().toString(),
+                'Player score: ',
+                game.getVictoryPoints().toString(),
               ),
             ],
           ),
@@ -39,7 +39,7 @@ class GameScoreWidget extends StatelessWidget {
       );
     } on GameFinishedException catch (e) {
       Future.delayed(Duration.zero, () {
-        DialogUtil.showWinnerDialog(
+        DialogUtil.winnerDialog(
           context,
           e.winner.toString(),
         );
@@ -54,17 +54,17 @@ class GameScoreWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               InfoTextWidget(
-                description: 'Turn: ',
-                value: game.turn.toString(),
+                'Turn: ',
+                game.turn.toString(),
               ),
               const SizedBox(height: 12),
               InfoTextWidget(
-                description: 'Current player: ',
-                value: e.winner.toString(),
+                'Current player: ',
+                e.winner.toString(),
               ),
               InfoTextWidget(
-                description: 'Player score: ',
-                value: game.victoryPoints[e.winner].toString(),
+                'Player score: ',
+                game.victoryPoints[e.winner].toString(),
               ),
             ],
           ),

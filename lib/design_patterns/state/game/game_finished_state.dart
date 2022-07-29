@@ -25,11 +25,6 @@ class GameFinishedState implements GameState {
   }
 
   @override
-  void updatePlayerScore(int score) {
-    throw GameFinishedException(winner);
-  }
-
-  @override
   void nextPlayer() {
     throw GameFinishedException(winner);
   }

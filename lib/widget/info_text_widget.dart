@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class InfoTextWidget extends StatelessWidget {
   final String description;
   final String value;
-  const InfoTextWidget({
+  const InfoTextWidget(
+    this.description,
+    this.value, {
     Key? key,
-    required this.description,
-    required this.value,
   }) : super(key: key);
 
   @override

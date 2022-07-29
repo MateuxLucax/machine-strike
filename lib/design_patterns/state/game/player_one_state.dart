@@ -24,11 +24,6 @@ class PlayerOneState implements GameState {
   }
 
   @override
-  void updatePlayerScore(int score) {
-    game.victoryPoints[Player.one] = score + currentPlayerScore();
-  }
-
-  @override
   void nextPlayer() {
     game.turn++;
     game.setState(PlayerTwoState(game));

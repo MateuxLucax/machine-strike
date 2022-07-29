@@ -27,23 +27,27 @@ class AttackCommand extends MachineCommand {
           }
 
           if (machine.dead) {
-            // TODO: add points to enemy
             selectedTile.unsetMachine();
-            game.reset();
+            if (game.board.getMachinesByPlayer(game.player).isEmpty) {
+              game.updateScore(game.enemy, GameConst.victoryPointsWin + 1);
+            } else {
+              game.updateScore(game.enemy, machine.victoryPoints);
+            }
           }
 
           if (attackedMachine.dead) {
             tile.unsetMachine();
             if (game.board.getMachinesByPlayer(game.enemy).isEmpty) {
-              game.updateVictoryPoints(GameConst.victoryPointsWin + 1);
+              game.updateScore(game.player, GameConst.victoryPointsWin + 1);
             } else {
-              game.updateVictoryPoints(attackedMachine.victoryPoints);
+              game.updateScore(game.player, attackedMachine.victoryPoints);
             }
           }
         }
       }
     }
 
+    game.reset();
     game.updateSelectedTile(null);
   }
 }

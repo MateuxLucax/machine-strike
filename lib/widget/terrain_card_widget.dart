@@ -36,8 +36,8 @@ class TerrainCardWidget extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             InfoTextWidget(
-              description: 'Combat power offset: ',
-              value: terrain.combatPowerOffset.toString(),
+              'Combat power offset: ',
+              terrain.combatPowerOffset.toString(),
             ),
           ],
         ),

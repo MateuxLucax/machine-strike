@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:machinestrike/widget/dialog_util.dart';
 
 import '../controller/game_controller.dart';
 import '../controller/igame_controller.dart';
@@ -26,9 +27,7 @@ class GameView extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.help_outline_sharp),
             tooltip: 'How to play',
-            onPressed: () {
-              debugPrint('I need help');
-            },
+            onPressed: () => DialogUtil.helpDialog(context),
           ),
         ],
       ),

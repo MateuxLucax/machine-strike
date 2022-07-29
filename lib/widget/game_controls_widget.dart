@@ -15,36 +15,36 @@ class GameControlsWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
             InfoTextWidget(
-              description: 'W/A/S/D: ',
-              value: 'Cursor direction',
+              'W/A/S/D: ',
+              'Cursor direction',
             ),
             InfoTextWidget(
-              description: 'Enter: ',
-              value: 'Select a machine',
+              'Enter: ',
+              'Select a machine',
             ),
             InfoTextWidget(
-              description: 'Esc: ',
-              value: 'Unselect a machine',
+              'Esc: ',
+              'Unselect a machine',
             ),
             InfoTextWidget(
-              description: 'Q/E: ',
-              value: 'Rotate machine',
+              'Q/E: ',
+              'Rotate machine',
             ),
             InfoTextWidget(
-              description: 'T: ',
-              value: 'Attack other machine',
+              'T: ',
+              'Attack other machine',
             ),
             InfoTextWidget(
-              description: 'F: ',
-              value: 'Finish turn',
+              'F: ',
+              'Finish turn',
             ),
             InfoTextWidget(
-              description: 'Z: ',
-              value: 'Undo cursor',
+              'Z: ',
+              'Undo cursor',
             ),
             InfoTextWidget(
-              description: 'X: ',
-              value: 'Redo cursor',
+              'X: ',
+              'Redo cursor',
             ),
           ],
         ),
