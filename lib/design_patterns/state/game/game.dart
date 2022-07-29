@@ -1,5 +1,7 @@
 import '../../../config/game_const.dart';
 import '../../../enum/player.dart';
+import '../../../model/board.dart';
+import '../../../model/tile.dart';
 import 'game_finished_state.dart';
 import 'game_state.dart';
 import 'player_one_state.dart';
@@ -11,9 +13,10 @@ class Game {
     Player.two: 0,
   };
   int turn = 1;
-  Player? winner;
+  Board board;
+  Tile? selectedTile;
 
-  Game() {
+  Game(this.board) {
     _gameState = PlayerOneState(this);
   }
 
@@ -27,8 +30,7 @@ class Game {
     _gameState.updatePlayerScore(score);
     victoryPoints.forEach((player, playerScore) {
       if (playerScore >= GameConst.victoryPointsWin) {
-        winner = player;
-        setState(GameFinishedState(this));
+        setState(GameFinishedState(this, player));
       }
     });
   }
@@ -37,5 +39,15 @@ class Game {
 
   Player get enemy => _gameState.enemy();
 
-  void nextPlayer() => _gameState.nextPlayer();
+  void nextPlayer() {
+    reset(machines: true);
+    _gameState.nextPlayer();
+  }
+
+  void updateSelectedTile(Tile? tile) => selectedTile = tile;
+
+  void reset({machines = false}) {
+    selectedTile = null;
+    board.reset(machines: machines);
+  }
 }

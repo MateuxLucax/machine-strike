@@ -8,5 +8,5 @@
   <health>15</health>
   <movementRange>3</movementRange>
   <attackRange>3</attackRange>
-  <victoryPoints>1</victoryPoints>
+  <victoryPoints>2</victoryPoints>
 </root>

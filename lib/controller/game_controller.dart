@@ -1,11 +1,15 @@
 import 'package:flutter/services.dart';
 
-import '../config/game_const.dart';
 import '../design_patterns/command/command_invoker.dart';
 import '../design_patterns/command/cursor/cursor_down_command.dart';
 import '../design_patterns/command/cursor/cursor_left_command.dart';
 import '../design_patterns/command/cursor/cursor_right_command.dart';
 import '../design_patterns/command/cursor/cursor_up_command.dart';
+import '../design_patterns/command/game/attack_range_command.dart';
+import '../design_patterns/command/game/rachable_pieces_command.dart';
+import '../design_patterns/command/game/select_tile_command.dart';
+import '../design_patterns/command/machine/attack_command.dart';
+import '../design_patterns/command/machine/rotate_machine_command.dart';
 import '../design_patterns/observer/events/cursor_event.dart';
 import '../design_patterns/observer/events/game_event.dart';
 import '../design_patterns/observer/events/tiles_event.dart';
@@ -13,33 +17,89 @@ import '../design_patterns/observer/observer.dart';
 import '../design_patterns/observer/observer_event.dart';
 import '../design_patterns/singleton/cursor.dart';
 import '../design_patterns/state/game/game.dart';
-import '../enum/direction.dart';
-import '../enum/player.dart';
-import '../enum/reachability.dart';
+import '../exceptions/game_finished_exception.dart';
 import '../model/board.dart';
-import '../model/machine.dart';
 import '../model/tile.dart';
 import 'igame_controller.dart';
 
 class GameController implements IGameController {
-  Board board;
   final List<Observer> observers = [];
   final invoker = CommandInvoker();
-  Tile? selectedTile;
   late Game game;
 
-  GameController(this.board) {
-    game = Game();
+  GameController(Board board) {
+    game = Game(board);
   }
 
   @override
-  Tile get cursorTile => board.tiles[Cursor().row][Cursor().col];
+  Tile get cursorTile => game.board.tiles[Cursor().row][Cursor().col];
 
   @override
-  List<List<Tile>> get tiles => board.tiles;
+  List<List<Tile>> get tiles => game.board.tiles;
 
   @override
   Game get currentGame => game;
+
+  @override
+  void handleKeyStroke(RawKeyEvent event) {
+    if (event is! RawKeyDownEvent) return;
+    final tile = game.selectedTile;
+
+    final key = event.logicalKey;
+
+    try {
+      if (key == LogicalKeyboardKey.keyA) {
+        invoker.execute(CursorLeftCommand());
+      } else if (key == LogicalKeyboardKey.keyD) {
+        invoker.execute(CursorRightCommand());
+      } else if (key == LogicalKeyboardKey.keyS) {
+        invoker.execute(CursorDownCommand());
+      } else if (key == LogicalKeyboardKey.keyW) {
+        invoker.execute(CursorUpCommand());
+      } else if (key == LogicalKeyboardKey.escape) {
+        game.reset();
+      } else if (key == LogicalKeyboardKey.enter) {
+        invoker.execute(SelectTileCommand(game, cursorTile));
+        if (tile == null) {
+          invoker.execute(AttackRangeCommand(game));
+          invoker.execute(ReachablePiecesCommand(game));
+        }
+      } else if (key == LogicalKeyboardKey.keyT) {
+        if (tile != null) {
+          final machine = tile.machine;
+          if (machine != null) {
+            invoker.execute(AttackCommand(machine, game));
+            invoker.execute(AttackRangeCommand(game));
+          }
+        }
+      } else if (key == LogicalKeyboardKey.keyQ) {
+        if (tile != null) {
+          final machine = tile.machine;
+          if (machine != null) {
+            invoker.execute(RotateMachineCommand(machine, tile, false));
+            invoker.execute(AttackRangeCommand(game));
+          }
+        }
+      } else if (key == LogicalKeyboardKey.keyE) {
+        if (tile != null) {
+          final machine = tile.machine;
+          if (machine != null) {
+            invoker.execute(RotateMachineCommand(machine, tile, true));
+            invoker.execute(AttackRangeCommand(game));
+          }
+        }
+      } else if (key == LogicalKeyboardKey.keyF) {
+        invoker.clear();
+        game.nextPlayer();
+      } else if (key == LogicalKeyboardKey.keyZ) {
+        invoker.undo();
+      } else if (key == LogicalKeyboardKey.keyX) {
+        invoker.redo();
+      }
+
+      notifyObservers([TilesEvent(tiles), CursorEvent(cursorTile), GameEvent(game)]);
+    } on GameFinishedException catch (_) {}
+  }
 
   @override
   void attach(Observer observer) {
@@ -47,210 +107,9 @@ class GameController implements IGameController {
   }
 
   @override
-  void handleKeyStroke(RawKeyEvent event) {
-    if (event is! RawKeyDownEvent) return;
-    final tile = selectedTile;
-
-    final key = event.logicalKey;
-
-    if (key == LogicalKeyboardKey.keyA) {
-      invoker.execute(CursorLeftCommand());
-      _callObservers([CursorEvent(cursorTile)]);
-    } else if (key == LogicalKeyboardKey.keyD) {
-      invoker.execute(CursorRightCommand());
-      _callObservers([CursorEvent(cursorTile)]);
-    } else if (key == LogicalKeyboardKey.keyS) {
-      invoker.execute(CursorDownCommand());
-      _callObservers([CursorEvent(cursorTile)]);
-    } else if (key == LogicalKeyboardKey.keyW) {
-      invoker.execute(CursorUpCommand());
-      _callObservers([CursorEvent(cursorTile)]);
-    } else if (key == LogicalKeyboardKey.escape) {
-      _reset();
-      _callObservers([CursorEvent(cursorTile)]);
-    } else if (key == LogicalKeyboardKey.enter) {
-      if (tile == null && cursorTile.hasMachine && cursorTile.machine!.player == game.player) {
-        selectedTile = cursorTile;
-        _reachablePieces(cursorTile);
-        _attackRange(selectedTile!);
-      } else if (tile != null &&
-          !cursorTile.hasMachine &&
-          !(tile.machine?.alreadyMoved ?? false) &&
-          (cursorTile.reachability == Reachability.reachable)) {
-        tile.machine?.updateAlreadyMoved(true);
-        cursorTile.addMachine(tile.machine!);
-        board.tiles[tile.position.row][tile.position.col].unsetMachine();
-        _reset();
-      }
-      _callObservers([TilesEvent(tiles), CursorEvent(cursorTile)]);
-    } else if (key == LogicalKeyboardKey.keyT &&
-        tile != null &&
-        !(tile.machine?.alreadyAttacked ?? false)) {
-      tile.machine?.updateAlreadyAttacked(true);
-      final attack = tile.machine?.combatPower ?? 0 + (tile.terrain.combatPowerOffset);
-      for (var row in tiles) {
-        for (var col in row) {
-          if (col.inAttackRange) {
-            if (col.machine!.combatPower == tile.machine!.combatPower) {
-              col.machine?.receiveAttack(1);
-              tile.machine?.receiveAttack(1);
-            } else if (col.machine!.combatPower > tile.machine!.combatPower) {
-              tile.machine?.receiveAttack(attack);
-            } else {
-              col.machine?.receiveAttack(attack);
-            }
-
-            if (tile.machine?.dead ?? false) {
-              tile.unsetMachine();
-              _reset();
-            }
-
-            if (col.machine?.dead ?? false) {
-              col.unsetMachine();
-              if (enemyMachines.isEmpty) {
-                game.updateVictoryPoints(GameConst.victoryPointsWin + 1);
-                col.unsetMachine();
-                _attackRange(tile);
-                _reachablePieces(tile);
-              } else {
-                game.updateVictoryPoints(col.machine!.victoryPoints);
-              }
-              _attackRange(tile);
-              _reachablePieces(tile);
-            }
-          }
-        }
-      }
-      _callObservers([TilesEvent(tiles), CursorEvent(cursorTile), GameEvent(game)]);
-    } else if (key == LogicalKeyboardKey.keyQ && tile != null) {
-      if (tile.hasMachine) {
-        tile.machine!.updateDirection(tile.machine!.direction.previous());
-        tile.rotateMachine();
-      }
-      _attackRange(tile);
-      _callObservers([TilesEvent(tiles), CursorEvent(cursorTile)]);
-    } else if (key == LogicalKeyboardKey.keyE && tile != null) {
-      if (tile.hasMachine) {
-        tile.machine!.updateDirection(tile.machine!.direction.next());
-        tile.rotateMachine();
-      }
-      _attackRange(tile);
-      _callObservers([TilesEvent(tiles), CursorEvent(cursorTile)]);
-    } else if (key == LogicalKeyboardKey.keyF) {
-      _reset(machines: true);
-      invoker.clear();
-      game.nextPlayer();
-      _callObservers([GameEvent(game)]);
-    } else if (key == LogicalKeyboardKey.keyZ) {
-      invoker.undo();
-      _callObservers([CursorEvent(cursorTile)]);
-    } else if (key == LogicalKeyboardKey.keyX) {
-      invoker.redo();
-      _callObservers([CursorEvent(cursorTile)]);
-    }
-  }
-
-  void _reachablePieces(Tile selectedTile) {
-    if (!(selectedTile.machine?.alreadyMoved ?? true)) {
-      final position = selectedTile.position;
-      final movementRange = selectedTile.machine?.movementRange ?? 0;
-
-      for (var row in tiles) {
-        for (var col in row) {
-          if (col.machine == selectedTile.machine) {
-            continue;
-          }
-          final colPos = col.position;
-          final dist = (position.row - colPos.row).abs() + (position.col - colPos.col).abs();
-          if (dist > movementRange || col.hasMachine) {
-            col.updateReachability(Reachability.unreachable);
-          } else {
-            col.updateReachability(Reachability.reachable);
-          }
-        }
-      }
-    }
-  }
-
-  void _attackRange(Tile selectedTile) {
-    _reset();
-
-    if (!(selectedTile.machine?.alreadyAttacked ?? true)) {
-      final position = selectedTile.position;
-      final attackRange = selectedTile.machine?.attackRange ?? 0;
-      final direction = selectedTile.machine?.direction ?? Direction.north;
-      final player = selectedTile.machine?.player ?? Player.one;
-
-      if (direction == Direction.north) {
-        for (var row = 0; row < position.row; row++) {
-          if ((position.row - row).abs() <= attackRange) {
-            final tileMachine = tiles[row][position.col].machine;
-
-            if (tileMachine != null && tileMachine.player != player) {
-              tiles[row][position.col].updateInAttackRange(true);
-            }
-          }
-        }
-      } else if (direction == Direction.south) {
-        for (var row = (tiles.length - 1); row > position.row; row--) {
-          if ((position.row - row).abs() <= attackRange) {
-            final tileMachine = tiles[row][position.col].machine;
-
-            if (tileMachine != null && tileMachine.player != player) {
-              tiles[row][position.col].updateInAttackRange(true);
-            }
-          }
-        }
-      } else if (direction == Direction.east) {
-        for (var col = (tiles.length - 1); col > position.col; col--) {
-          if ((position.col - col).abs() <= attackRange) {
-            final tileMachine = tiles[position.row][col].machine;
-
-            if (tileMachine != null && tileMachine.player != player) {
-              tiles[position.row][col].updateInAttackRange(true);
-            }
-          }
-        }
-      } else if (direction == Direction.west) {
-        for (var col = 0; col < position.col; col++) {
-          if ((position.col - col).abs() <= attackRange) {
-            final tileMachine = tiles[position.row][col].machine;
-
-            if (tileMachine != null && tileMachine.player != player) {
-              tiles[position.row][col].updateInAttackRange(true);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  void _reset({machines = false}) {
-    board.reset(machines: machines);
-    selectedTile = null;
-  }
-
-  void _callObservers(List<ObserverEvent> events) {
+  void notifyObservers(List<ObserverEvent> events) {
     for (var observer in observers) {
       events.forEach(observer.update);
     }
   }
-
-  List<Machine> _getMachinesByPlayer(Player player) {
-    final List<Machine> machines = [];
-    for (var row in tiles) {
-      for (var col in row) {
-        final machine = col.machine;
-        if (machine != null) {
-          if (machine.player == player) {
-            machines.add(machine);
-          }
-        }
-      }
-    }
-
-    return machines;
-  }
-
-  List<Machine> get enemyMachines => _getMachinesByPlayer(game.enemy);
 }

@@ -56,6 +56,10 @@ class MachineCardWidget extends StatelessWidget {
               value: machine.attackRange.toString(),
             ),
             InfoTextWidget(
+              description: 'Victory points: ',
+              value: machine.victoryPoints.toString(),
+            ),
+            InfoTextWidget(
               description: 'Machine owner: ',
               value: machine.player.toString(),
             ),

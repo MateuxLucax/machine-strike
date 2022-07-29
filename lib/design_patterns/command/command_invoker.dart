@@ -2,8 +2,8 @@ import '../../utils/stack.dart';
 import 'command.dart';
 
 class CommandInvoker {
-  final Stack<Command> _undo = Stack<Command>(20);
-  final Stack<Command> _redo = Stack<Command>(20);
+  final Stack<Command> _undo = Stack<Command>();
+  final Stack<Command> _redo = Stack<Command>();
 
   void execute(Command command) {
     _undo.push(command);

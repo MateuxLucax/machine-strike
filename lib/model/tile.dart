@@ -1,7 +1,6 @@
 import '../design_patterns/decorator/tile/add_widget_on_stack_decorator.dart';
 import '../design_patterns/decorator/tile/base_tile_stack.dart';
 import '../design_patterns/decorator/tile/tile_stack.dart';
-import '../enum/reachability.dart';
 import 'machine.dart';
 import 'terrain.dart';
 import 'tile_position.dart';
@@ -10,8 +9,8 @@ class Tile {
   TilePosition position;
   Terrain terrain;
   Machine? machine;
-  Reachability? reachability;
   TileStack tileStack;
+  late bool reachable;
   late bool inAttackRange;
 
   Tile({
@@ -21,10 +20,9 @@ class Tile {
     bool? inAttackRange,
     this.machine,
   }) {
+    reachable = false;
     this.inAttackRange = inAttackRange ?? false;
   }
-
-  bool get hasMachine => machine != null;
 
   Tile copyWith({
     TilePosition? position,
@@ -45,10 +43,7 @@ class Tile {
   void unsetMachine() {
     final currentMachine = machine;
     if (currentMachine != null) {
-      final key = currentMachine.getAsset().key;
-      if (key != null) {
-        tileStack = BaseTileStack(terrain.asset);
-      }
+      tileStack = BaseTileStack(terrain.asset);
       machine = null;
     }
   }
@@ -66,8 +61,8 @@ class Tile {
     }
   }
 
-  void updateReachability(Reachability? reachability) {
-    this.reachability = reachability;
+  void updateReachability(bool reachable) {
+    this.reachable = reachable;
   }
 
   void updateInAttackRange(bool inAttackRange) {
@@ -76,6 +71,6 @@ class Tile {
 
   @override
   String toString() {
-    return '$position - ${machine?.name} - ${terrain.name} - ${tileStack.getStack().length} - $reachability';
+    return '$position - ${machine?.name} - ${terrain.name} - ${tileStack.getStack().length} - $reachable';
   }
 }

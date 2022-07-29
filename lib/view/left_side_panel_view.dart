@@ -5,7 +5,6 @@ import '../design_patterns/observer/events/game_event.dart';
 import '../design_patterns/observer/observer.dart';
 import '../design_patterns/observer/observer_event.dart';
 import '../design_patterns/state/game/game.dart';
-import '../widget/dialog_util.dart';
 import '../widget/game_controls_widget.dart';
 import '../widget/game_score_card_widget.dart';
 
@@ -31,19 +30,6 @@ class _LeftSidePanelViewState extends State<LeftSidePanelView> implements Observ
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final game = observedGame;
-
-    if (game != null) {
-      final winner = game.winner;
-
-      if (winner != null) {
-        Future.delayed(Duration.zero, () {
-          DialogUtil.showWinnerDialog(
-            context,
-            winner.toString(),
-          );
-        });
-      }
-    }
 
     return Expanded(
       child: Container(

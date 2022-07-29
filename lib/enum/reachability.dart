@@ -1,4 +1,0 @@
-enum Reachability {
-  reachable,
-  unreachable,
-}

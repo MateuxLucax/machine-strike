@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:machinestrike/design_patterns/decorator/tile/selected_tile_decorator.dart';
 
 import '../controller/igame_controller.dart';
 import '../design_patterns/decorator/tile/attack_tile_decorator.dart';
@@ -9,7 +10,6 @@ import '../design_patterns/observer/events/tiles_event.dart';
 import '../design_patterns/observer/observer.dart';
 import '../design_patterns/observer/observer_event.dart';
 import '../design_patterns/singleton/cursor.dart';
-import '../enum/reachability.dart';
 import '../model/tile.dart';
 import '../widget/tile_widget.dart';
 
@@ -73,11 +73,17 @@ class _BoardViewState extends State<BoardView> implements Observer {
                 if (index == cursorPosition) {
                   return TileWidget(SelectTileStackDecorator((tiles[cursorPosition].tileStack)));
                 }
-                if (tile.reachability == Reachability.reachable) {
+                if (tile.reachable) {
                   return TileWidget(ReachableTileDecorator(tile.tileStack));
                 }
                 if (tile.inAttackRange) {
                   return TileWidget(AttackTileDecorator(tile.tileStack));
+                }
+                final selectedTile = widget.controller.currentGame.selectedTile;
+                if (selectedTile != null) {
+                  if (tile.position == selectedTile.position) {
+                    return TileWidget(SelectedTileDecorator(tile.tileStack));
+                  }
                 }
 
                 return TileWidget(tile.tileStack);
