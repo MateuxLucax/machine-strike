@@ -1,16 +1,15 @@
-# machinestrike
+# Machine Strike made with Flutter
 
-A new Flutter project.
+## Setup
 
-## Getting Started
+This project was made using Flutter. It's an awesome technology and you should definitely try it out.
 
-This project is a starting point for a Flutter application.
+If you don't have Flutter install on your computer, head on to:
+- [Install on Windows](https://docs.flutter.dev/get-started/install/windows)
+- [Install on Mac](https://docs.flutter.dev/get-started/install/macos)
+- [Install on Linux](https://docs.flutter.dev/get-started/install/linux)
+- [Install on Chrome OS](https://docs.flutter.dev/get-started/install/chromeos)
 
-A few resources to get you started if this is your first Flutter project:
+Now you are ready to run the code!
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Running the code
