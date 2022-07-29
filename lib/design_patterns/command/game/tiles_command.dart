@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../state/game/game.dart';
 import '../command.dart';
 
@@ -8,11 +10,11 @@ abstract class GameCommand implements Command {
 
   @override
   void redo() {
-    // Nothing to do here
+    debugPrint('Can\'t redo this command');
   }
 
   @override
   void undo() {
-    // Nothing to do here
+    debugPrint('Can\'t undo this command');
   }
 }

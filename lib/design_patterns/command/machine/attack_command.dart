@@ -27,6 +27,7 @@ class AttackCommand extends MachineCommand {
           }
 
           if (machine.dead) {
+            // TODO: add points to enemy
             selectedTile.unsetMachine();
             game.reset();
           }

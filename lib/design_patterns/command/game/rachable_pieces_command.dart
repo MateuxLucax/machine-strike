@@ -12,7 +12,7 @@ class ReachablePiecesCommand extends GameCommand {
       if (machine != null) {
         if (!(machine.alreadyMoved)) {
           final position = tile.position;
-          final movementRange = tile.machine?.movementRange ?? 0;
+          final movementRange = machine.movementRange;
 
           for (var row in game.board.tiles) {
             for (var col in row) {

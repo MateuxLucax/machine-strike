@@ -1,5 +1,6 @@
-import 'package:machinestrike/model/machine.dart';
+import 'package:flutter/foundation.dart';
 
+import '../../../model/machine.dart';
 import '../command.dart';
 
 abstract class MachineCommand implements Command {
@@ -9,11 +10,11 @@ abstract class MachineCommand implements Command {
 
   @override
   void redo() {
-    // Nothing to do here
+    debugPrint('Can\'t redo this command');
   }
 
   @override
   void undo() {
-    // Nothing to do here
+    debugPrint('Can\'t undo this command');
   }
 }

@@ -44,6 +44,7 @@ class GameScoreWidget extends StatelessWidget {
           e.winner.toString(),
         );
       });
+
       return Card(
         child: Container(
           padding: const EdgeInsets.all(12),
