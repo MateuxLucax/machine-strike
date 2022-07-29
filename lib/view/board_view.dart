@@ -70,23 +70,25 @@ class _BoardViewState extends State<BoardView> implements Observer {
               itemCount: tiles.length,
               itemBuilder: (context, index) {
                 final tile = tiles[index];
-                if (index == cursorPosition) {
-                  return TileWidget(SelectTileStackDecorator((tiles[cursorPosition].tileStack)));
-                }
+                var tileWidget = TileWidget(tile.tileStack);
+
                 if (tile.reachable) {
-                  return TileWidget(ReachableTileDecorator(tile.tileStack));
+                  tileWidget = TileWidget(ReachableTileDecorator(tileWidget.tileStack));
                 }
                 if (tile.inAttackRange) {
-                  return TileWidget(AttackTileDecorator(tile.tileStack));
+                  tileWidget = TileWidget(AttackTileDecorator(tileWidget.tileStack));
                 }
                 final selectedTile = widget.controller.currentGame.selectedTile;
                 if (selectedTile != null) {
                   if (tile.position == selectedTile.position) {
-                    return TileWidget(SelectedTileDecorator(tile.tileStack));
+                    tileWidget = TileWidget(SelectedTileDecorator(tileWidget.tileStack));
                   }
                 }
+                if (index == cursorPosition) {
+                  tileWidget = TileWidget(SelectTileStackDecorator((tileWidget.tileStack)));
+                }
 
-                return TileWidget(tile.tileStack);
+                return tileWidget;
               },
             ),
           ),

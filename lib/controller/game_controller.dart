@@ -48,6 +48,8 @@ class GameController implements IGameController {
     final key = event.logicalKey;
 
     try {
+      // I wish I could use a switch, but I cant't
+      // due to LogicalKeyBoardKey operator match
       if (key == LogicalKeyboardKey.keyA) {
         invoker.execute(CursorLeftCommand());
       } else if (key == LogicalKeyboardKey.keyD) {
